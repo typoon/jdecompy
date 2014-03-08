@@ -1,4 +1,13 @@
+tags
 *.py[cod]
+parsetab.py
+
+# C code / flex / bison
+*.c
+*.h
+*.y
+*.l
+*.out
 
 # C extensions
 *.so
