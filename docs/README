@@ -1,0 +1,41 @@
+What is it?
+===========
+
+jdecompy is a .class decompiler. It gives the user a Python class representing
+the .class file and a set of functions that can be used to manipulate and
+inspect such .class file.
+
+For now, the available features are:
+*   Rename the class file
+*   Add new methods to the class file (user needs to supply the bytecode
+manually)
+
+
+Decompiling a .class
+====================
+
+In this first example, I'll demonstrate how to decompile a class file, and what
+is the available information that can be accessed.
+
+from classfile import ClassFile
+import sys
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Use: python3 main.py File.class")
+        sys.exit(1)
+
+    c = ClassFile(sys.argv[1])
+    c.load()
+
+
+That's it! The variable "c" is now an instance of the ClassFile class
+representing a **.class** file.
+
+Accessing the constant pool
+===========================
+
+The constant_pool is bla bla bla
+
+
+

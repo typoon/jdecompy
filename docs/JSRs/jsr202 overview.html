@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>jsr202 overview</title>
+</head>
+<body>
+<h1>JSR 202 Proposed Final Draft</h1>
+<br>
+This is the proposed final draft describing proposed changes to the
+Java class file format under JSR202, slated for inclusion in Java 6.
+There are two PDF files. One is the revised version of<a
+ href="ClassFile-Java6.pdf"> chapter 4 of the class file forma</a>t,
+which contains the modified specification. The other is a <a
+ href="ClassFileCMP.pdf">diff file</a> that shows the differences visa
+vis the analogous Java 5 specification.<br>
+<br>
+The main difference is the introduction of a new verification scheme
+based on type checking rather than type inference. This scheme has
+inherent advantages in performance (both space (on the order of&nbsp;
+90% savings) and time (approximately 2x)) over the previous approach.
+It is also simpler and more robust, and helps pave the way for future
+evolution of the platform.<br>
+<br>
+This specification is governed by this <a
+ href="202-pfd-eval-license-pub.html">license</a>.<br>
+<br>
+</body>
+</html>

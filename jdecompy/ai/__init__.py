@@ -1,0 +1,24 @@
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
+from ai.attributeannotationdefault import AttributeAnnotationDefault
+from ai.attributecode import AttributeCode
+from ai.attributeconstantvalue import AttributeConstantValue
+from ai.attributedeprecated import AttributeDeprecated
+from ai.attributeenclosingmethod import AttributeEnclosingMethod
+from ai.attributeexceptions import AttributeExceptions
+from ai.attributeinnerclasses import AttributeInnerClasses
+from ai.attributelocalvariabletable import AttributeLocalVariableTable
+from ai.attributelocalvariabletypetable import AttributeLocalVariableTypeTable
+from ai.attributelinenumbertable import AttributeLineNumberTable
+from ai.attributeruntimeinvisibleannotations import AttributeRuntimeInvisibleAnnotations
+from ai.attributeruntimeinvisibleparameterannotations import AttributeRuntimeInvisibleParameterAnnotations
+from ai.attributeruntimevisibleannotations import AttributeRuntimeVisibleAnnotations
+from ai.attributeruntimevisibleparameterannotations import AttributeRuntimeVisibleParameterAnnotations
+from ai.attributesignature import AttributeSignature
+from ai.attributesourcedebugextension import AttributeSourceDebugExtension
+from ai.attributesourcefile import AttributeSourceFile
+from ai.attributestackmaptable import AttributeStackMapTable
+from ai.attributesynthetic import AttributeSynthetic
