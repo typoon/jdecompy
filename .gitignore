@@ -2,6 +2,9 @@ tags
 *.py[cod]
 parsetab.py
 
+# Vim swap files
+*.swp
+
 # C code / flex / bison
 *.c
 *.h

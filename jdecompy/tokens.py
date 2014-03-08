@@ -6,6 +6,10 @@ def t_error(t):
     print("Illegal char '%s' on line %d" % (t.value[0], t.lineno))
 
 
+states = (
+    ('stdecvar', 'exclusive'),
+#    ('stddevmethod', 'exclusive'),
+)
 
 tokens = (
     # Data Types
@@ -20,21 +24,17 @@ tokens = (
     'STRING',
     'NUMBER',
     'HEXNUMBER',
-    # General asm identifiers
-	'VAR_BYTE',
-    'VAR_CHAR',
-    'VAR_DOUBLE',
-    'VAR_FLOAT',
-    'VAR_INT',
-    'VAR_LONG',
-    'VAR_SHORT',
-    'VAR_BOOL',
-    'VAR_STRING',
-    'VAR_OTHERTYPE',
-	'DEREF',
+
+    # Variable/field related
+    'VAR',
+    'VAR_NAME',
+    'VAR_TYPE',
+
+    # Access modifiers
     'ACCESS_MODIFIER',
-    'STATIC_MODIFIER',
-    'FINAL_MODIFIER',
+
+    # Return type
+    'RET_TYPE',
 
 #%token <identifier> IDENTIFIER
 
@@ -309,62 +309,97 @@ def t_HEXNUMBER(t):
 
 t_STRING = r'["]([^\\"]+|\\.)*["]'
 
-t_VAR_BYTE = r'[\.]byte'
-t_VAR_CHAR = r'[\.]char'
-t_VAR_DOUBLE = r'[\.]double'
-t_VAR_FLOAT = r'[\.]float'
-t_VAR_INT = r'[\.]int'
-t_VAR_LONG = r'[\.]long'
-t_VAR_SHORT = r'[\.]short'
-t_VAR_BOOL = r'[\.]bool'
-t_VAR_STRING = r'[\.]string'
-t_VAR_OTHERTYPE = r'[\.]class\/[a-zA-Z\.]+' # TODO: This is awful
+# Rules for handling field/variable declaration
+t_stdecvar_ignore = '\t\r '
+
+def t_stdecvar_error(t):
+    print("Illegal char '%s' on line %d" % (t.value[0], t.lineno))
+
+
+def t_stdecvar(t):
+    r'[\.]var'
+    t.lexer.begin('stdecvar')
+    t.type = 'VAR'
+    return t
+
+def t_stdecvar_newline(t):
+    r'\n'
+    t.lexer.begin('INITIAL')
+    t.lexer.lineno += len(t.value)
+
+
+def t_stdecvar_reserved(t):
+    r'[a-zA-Z]+'
+    t.type = reserved_stdecvar.get(t.value, 'VAR_NAME')
+
+    return t
+
+def t_stdecvar_VAR_TYPE(t):
+    r'[a-zA-Z]+([\.][a-zA-Z]+)+'
+    t.type = 'VAR_TYPE'
+
+    return t
+
+reserved_stdecvar = {
+    'public' : 'ACCESS_MODIFIER',
+    'private' : 'ACCESS_MODIFIER',
+    'protected' : 'ACCESS_MODIFIER',
+    'static' : 'ACCESS_MODIFIER',
+    'synthetic' : 'ACCESS_MODIFIER',
+    'volatile' : 'ACCESS_MODIFIER',
+    'transient' : 'ACCESS_MODIFIER',
+    'final' : 'ACCESS_MODIFIER',
+
+    'byte' : 'VAR_TYPE',
+    'char' : 'VAR_TYPE',
+    'double' : 'VAR_TYPE',
+    'float' : 'VAR_TYPE',
+    'int' : 'VAR_TYPE',
+    'long' : 'VAR_TYPE',
+    'short' : 'VAR_TYPE',
+    'bool' : 'VAR_TYPE',
+}
+
+
+# End rules for field/variable declaration
 
 t_METHOD_START = r'[\.]method'
 t_METHOD_END = r'[\.]method_end'
-t_PARAMS = r'[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*' 
+t_PARAMS = r'[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*'
 t_IDENTIFIER = r'[$][a-zA-Z_$]+'
 
 reserved = {
-    # Access modifiers
-    'public' :  'ACCESS_MODIFIER',
-    'private' : 'ACCESS_MODIFIER',
-    'protected' : 'ACCESS_MODIFIER',
-
-    'static' : 'STATIC_MODIFIER',
-    'final' : 'FINAL_MODIFIER',
-
     # opcodes
-    'nop'           :  'NOP',           
-    'aconst_null'   :  'ACONST_NULL',   
-    'iconst_m1'     :  'ICONST_M1',     
-    'iconst_0'      :  'ICONST_0',      
-    'iconst_1'      :  'ICONST_1',      
-    'iconst_2'      :  'ICONST_2',      
-    'iconst_3'      :  'ICONST_3',      
-    'iconst_4'      :  'ICONST_4',      
-    'iconst_5'      :  'ICONST_5',      
-    'lconst_0'      :  'LCONST_0',      
-    'lconst_1'      :  'LCONST_1',      
-    'fconst_0'      :  'FCONST_0',      
-    'fconst_1'      :  'FCONST_1',      
-    'fconst_2'      :  'FCONST_2',      
-    'dconst_0'      :  'DCONST_0',      
-    'dconst_1'      :  'DCONST_1',      
-    'bipush'        :  'BIPUSH',        
-    'sipush'        :  'SIPUSH',        
-    'ldc'           :  'LDC',           
-    'ldc_w'         :  'LDC_W',         
-    'ldc2_w'        :  'LDC2_W',        
-    'aaload'        :  'AALOAD',        
-    'return'        :  'RETURN',        
-    'getstatic'     :  'GETSTATIC',     
-    'newarray'      :  'NEWARRAY',      
-    'pop'           :  'POP',           
-    'pop2'          :  'POP2',          
-    'dup'           :  'DUP',           
-    'invokevirtual' :  'INVOKEVIRTUAL', 
-    'invokestatic'  :  'INVOKESTATIC',  
+    'nop'           :  'NOP',
+    'aconst_null'   :  'ACONST_NULL',
+    'iconst_m1'     :  'ICONST_M1',
+    'iconst_0'      :  'ICONST_0',
+    'iconst_1'      :  'ICONST_1',
+    'iconst_2'      :  'ICONST_2',
+    'iconst_3'      :  'ICONST_3',
+    'iconst_4'      :  'ICONST_4',
+    'iconst_5'      :  'ICONST_5',
+    'lconst_0'      :  'LCONST_0',
+    'lconst_1'      :  'LCONST_1',
+    'fconst_0'      :  'FCONST_0',
+    'fconst_1'      :  'FCONST_1',
+    'fconst_2'      :  'FCONST_2',
+    'dconst_0'      :  'DCONST_0',
+    'dconst_1'      :  'DCONST_1',
+    'bipush'        :  'BIPUSH',
+    'sipush'        :  'SIPUSH',
+    'ldc'           :  'LDC',
+    'ldc_w'         :  'LDC_W',
+    'ldc2_w'        :  'LDC2_W',
+    'aaload'        :  'AALOAD',
+    'return'        :  'RETURN',
+    'getstatic'     :  'GETSTATIC',
+    'newarray'      :  'NEWARRAY',
+    'pop'           :  'POP',
+    'pop2'          :  'POP2',
+    'dup'           :  'DUP',
+    'invokevirtual' :  'INVOKEVIRTUAL',
+    'invokestatic'  :  'INVOKESTATIC',
 }
 
 
@@ -374,3 +409,10 @@ def t_METHOD_IDENTIFIER(t):
     return t
 
 
+def test(data):
+   lexer = lex.lex()
+   lexer.input(data)
+   while True:
+       tok = lexer.token()
+       if not tok: break
+       print(tok)

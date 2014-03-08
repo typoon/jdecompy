@@ -32,6 +32,9 @@ class ClassFile:
         self._file = None
         self._file_path = file_path
 
+        # Used to report errors to the compiler
+        self._error = ""
+
     def load(self):
         """
         This method will open the file pointed by file_path and populate the
@@ -146,10 +149,16 @@ class ClassFile:
         self.attributes.set_count(self.attributes_count)
         self.attributes.build(self._file)
         print(self._file.tell())
-    
+
+    def set_error(self, message):
+        self._error = message
+
+    def get_error(self):
+        return self._error
+
     def get_bytes(self):
         ret = b''
-        
+
         ret += self.magic
         ret += self.minor_version
         ret += self.major_version
@@ -159,23 +168,23 @@ class ClassFile:
         ret += struct.pack(">h", self.this_class)
         ret += struct.pack(">h", self.super_class)
         ret += struct.pack(">h", self.interfaces_count)
-        
+
         for i in self.interfaces:
             ret += struct.pack(">h", i)
-        
+
         ret += struct.pack(">h", self.fields_count)
-        
+
         for f in self.fields:
             ret += f.get_bytes()
-        
+
         ret += struct.pack(">h", self.methods_count)
-        
+
         for m in self.methods:
             ret += m.get_bytes()
-        
+
         ret += struct.pack(">h", self.attributes_count)
         ret += self.attributes.get_bytes()
-        
+
         return ret
 
     def compile_from_file(self, path):
@@ -201,7 +210,7 @@ class ClassFile:
         self.constant_pool.entries[name_index].length = len(name)
         self.constant_pool.entries[name_index].bytes = name.encode('utf-8')
 
-    def add_class_field(self, access_modifiers, name, type):
+    def add_class_field(self, access_modifiers, type, name):
         field = FieldInfo(self.constant_pool)
 
         if type == 'byte':
@@ -221,10 +230,15 @@ class ClassFile:
         elif type == 'bool':
             type = 'Z'
 
+        # TODO: if type has a '.' in it, it should be replaced with a /
+
         name_index = self.constant_pool.add_utf8info(name, len(name))
         descriptor_index = self.constant_pool.add_utf8info(type, len(type))
 
         access_flags = 0
+        # TODO: Need to validate if the modifiers conflict with each other 
+        # (such as being public and private at the same time). If so, need
+        # to call self.set_error and return False
         for am in access_modifiers:
             if am == 'public':
                 access_flags |= ACC_PUBLIC
