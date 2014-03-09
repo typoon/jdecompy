@@ -17,13 +17,68 @@ def p_start(p):
              | empty'''
     pass
 
-##############
+############## Methods
+
+#def p_methods(p):
+#    '''methods : methods METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END
+#               | empty METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END'''
+#
+#    pass
 
 def p_methods(p):
-    '''methods : methods METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END
-               | empty METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END'''
+    '''methods: methods method_start method_body method_end
+              | empty method_start method_body method_end'''
+
 
     pass
+
+def p_method_start(p):
+    '''method_start : METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS'''
+    pass
+
+def p_method_body(p):
+    '''method_body : vars
+                   | mnemonics'''
+    pass
+
+def p_method_body_2(p):
+    '''method_body : vars mnemonics'''
+    pass
+
+def p_method_end(p):
+    '''method_end : METHOD_END'''
+    pass
+
+def p_mnemonics(p):
+    '''mnemonics : mnemonics opcode
+                 | empty opcode'''
+    pass
+
+def p_opcode(p):
+    '''opcode : nop'''
+    pass
+
+#opcode:
+#    nop
+#    | aconst_null
+#    | iconst_m1
+#    | iconst_0
+#    | iconst_1
+#    | iconst_2
+#    | iconst_3
+#    | iconst_4
+#    | iconst_5
+#    | lconst_0
+#    | lconst_1
+#    | fconst_0
+#    | fconst_1
+#    | fconst_2
+#    | dconst_0
+#    | dconst_1
+#    | bipush
+#    | sipush
+#    | ldc
+#    | ldc_w
 
 ##############
 
@@ -48,6 +103,7 @@ def p_var(p):
 
 def p_var_array(p):
     '''var : VAR access_modifiers VAR_TYPE array_types VAR_NAME'''
+    # TODO: Add arrays support
     print("Arrays not supported yet")
     raise SyntaxError
 
