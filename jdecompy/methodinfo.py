@@ -227,7 +227,7 @@ class MethodInfo:
                     asm += ' ' + str(hex(b))
 
                     count = count + 1 + 1 + 4
-                
+
                 else:
                     asm += 'wide opcode could not be parsed correctly.'
                     asm += 'From this point, this disasm cannot be trusted'

@@ -27,7 +27,7 @@ class FieldRefInfo(ConstantPoolEntry):
         return self._constant_pool.entries[self.class_index].get_name()
 
     def get_field_name(self):
-        return self._constant_pool.entries[self.name_and_type_index].get_class_name()
+        return self._constant_pool.entries[self.name_and_type_index].get_name()
 
     def get_field_type(self):
         info = self._constant_pool.entries[self.name_and_type_index].get_descriptor()

@@ -33,7 +33,8 @@ class FieldInfo:
     def __str__(self):
         ret = 'FieldInfo: '
         ret += self.get_field_type() + ' '
-        ret += self._constant_pool.entries[self.name_index].get_bytes_as_str()
+        ret += self._constant_pool.entries[self.name_index].get_bytes_as_str() + ' '
+        ret += 'Access flags: %d' % self.access_flags
         return ret
 
     def _build(self, f):
@@ -49,14 +50,14 @@ class FieldInfo:
         print("Attributes count: ", self.attributes_count)
         print(self)
         self.attributes.build(f)
-        
+
     def get_bytes(self):
         ret = b''
-        
+
         ret += struct.pack(">h", self.access_flags)
         ret += struct.pack(">h", self.name_index)
         ret += struct.pack(">h", self.descriptor_index)
         ret += struct.pack(">h", self.attributes_count)
         ret += self.attributes.get_bytes()
-        
+
         return ret

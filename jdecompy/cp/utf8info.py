@@ -31,8 +31,8 @@ class Utf8Info(ConstantPoolEntry):
 
     def get_bytes(self):
         ret = super().get_bytes()
-        
+
         ret += struct.pack(">h", self.length)
         ret += self.bytes
-        
+
         return ret

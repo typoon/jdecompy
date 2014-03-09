@@ -11,9 +11,21 @@ def p_empty(p):
     pass
 
 def p_start(p):
-    '''start : fields
+    '''start : fields methods
+             | fields
+             | methods
              | empty'''
     pass
+
+##############
+
+def p_methods(p):
+    '''methods : methods METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END
+               | empty METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS METHOD_END'''
+
+    pass
+
+##############
 
 def p_fields(p):
     '''fields : vars'''
@@ -28,10 +40,21 @@ def p_var(p):
     '''var : VAR access_modifiers VAR_TYPE VAR_NAME'''
     print("%s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
 
-    if not cf.add_class_field(p.modifiers, p[3], p[4]):
+    if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
         print(cf.get_error())
         raise SyntaxError
 
+    del p.modifiers
+
+def p_var_array(p):
+    '''var : VAR access_modifiers VAR_TYPE array_types VAR_NAME'''
+    print("Arrays not supported yet")
+    raise SyntaxError
+
+def p_array_types(p):
+    '''array_types : array_types ARRAY
+                   | empty ARRAY'''
+    pass
 
 def p_access_modifiers(p):
     ''' access_modifiers : access_modifiers ACCESS_MODIFIER

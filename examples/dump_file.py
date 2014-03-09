@@ -17,7 +17,7 @@ if __name__ == '__main__':
     print("Constant pool count: ", c.constant_pool_count)
 
     for i in range(1, c.constant_pool_count):
-        print("[%d] %s" % (i, c.constant_pool.entries[i]))
+        print("\t[%d] %s" % (i, c.constant_pool.entries[i]))
 
     print("Constant pool size in bytes: %d" % c.constant_pool.get_size_in_bytes())
     print("Access flags: %d" % c.access_flags)
@@ -28,18 +28,13 @@ if __name__ == '__main__':
     print("Fields count: %s" % c.fields_count)
 
     for i in range(c.fields_count):
-        print(c.fields[i])
+        print("\t", c.fields[i])
 
     print("Methods count: %d" % c.methods_count)
-    print("Attributes count: %d" % c.attributes_count)
 
     for i in range(c.methods_count):
-        print(c.methods[i].get_method_signature())
-        #print(c.methods[i].get_code_asm())
-        
-    print("Classfile bytes = ")
-    print(c.get_bytes())
+        print("\t", c.methods[i].get_method_signature())
+        print(c.methods[i].get_code_asm())
 
-    print("Classfile bytes = ")
-    print(c.get_bytes())
-    print("This class: %s" % c.constant_pool.entries[c.this_class].get_name())
+    print("Attributes count: %d" % c.attributes_count)
+

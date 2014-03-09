@@ -1,5 +1,6 @@
 from cp.constantpoolfactory import ConstantPoolFactory
 from cp.utf8info import Utf8Info
+from cp.nameandtypeinfo import NameAndTypeInfo
 from constants import *
 
 
@@ -50,11 +51,28 @@ class ConstantPool:
         ret = b''
 
         print(len(self.entries))
-        
+
         for e in self.entries[1:]:
             ret += e.get_bytes()
-            
+
         return ret
+
+    def add_nameandtypeinfo(self, name, type):
+        name_and_type_info = NameAndTypeInfo()
+
+        name_index = self.add_utf8info(name, len(name))
+        descriptor_index = self.add_utf8info(type, len(type))
+
+        name_and_type_info.name_index = name_index
+        name_and_type_info.descriptor_index = descriptor_index
+        name_and_type_info._constant_pool = self
+
+        print(vars(name_and_type_info))
+
+        self._count += 1
+        self.entries.append(name_and_type_info)
+
+        return self._count-1
 
     def add_utf8info(self, string, length):
         ''' Adds a new Utf8Info entry in the constant pool

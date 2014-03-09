@@ -211,6 +211,7 @@ class ClassFile:
         self.constant_pool.entries[name_index].bytes = name.encode('utf-8')
 
     def add_class_field(self, access_modifiers, type, name):
+        """ Add a new field to the class and returns it to the caller """
         field = FieldInfo(self.constant_pool)
 
         if type == 'byte':
@@ -232,13 +233,14 @@ class ClassFile:
 
         # TODO: if type has a '.' in it, it should be replaced with a /
 
-        name_index = self.constant_pool.add_utf8info(name, len(name))
-        descriptor_index = self.constant_pool.add_utf8info(type, len(type))
+        name_and_type_index = self.constant_pool.add_nameandtypeinfo(name, type)
+        name_and_type_info = self.constant_pool.entries[name_and_type_index]
+
 
         access_flags = 0
         # TODO: Need to validate if the modifiers conflict with each other 
         # (such as being public and private at the same time). If so, need
-        # to call self.set_error and return False
+        # to call self.set_error and return None
         for am in access_modifiers:
             if am == 'public':
                 access_flags |= ACC_PUBLIC
@@ -255,15 +257,17 @@ class ClassFile:
             # TODO: Seems there are some others missing here, such as Synthetic, Bridge, and others
 
         field.access_flags = access_flags
-        field.name_index = name_index
-        field.descriptor_index = descriptor_index
+        field.name_index = name_and_type_info.name_index
+        field.descriptor_index = name_and_type_info.descriptor_index
         field.attributes_count = 0
 
-        # TODO Do I need to add a NameAndTypeInfo here as well?
+        # TODO: Looks like a fieldrefinfo is also needed
 
         self.fields.append(field)
         self.fields_count += 1
         self.constant_pool_count = self.constant_pool._count
+
+        return field
 
     def add_method(self, access_flags, name, signature, code):
         pass

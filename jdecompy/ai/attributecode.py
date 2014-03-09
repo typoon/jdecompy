@@ -35,16 +35,16 @@ class AttributeCode(AttributeInfoEntry):
             self.handler_pc = int.from_bytes(f.read(2), byteorder="big")
             self.catch_type = int.from_bytes(f.read(2), byteorder="big")
             return 8
-        
+
         def get_bytes(self):
             ret = b''
             ret += struct.pack(">h", self.start_pc)
             ret += struct.pack(">h", self.end_pc)
             ret += struct.pack(">h", self.handler_pc)
             ret += struct.pack(">h", self.catch_type)
-            
+
             return ret
-            
+
 
     def __init__(self, constant_pool):
         super().__init__(constant_pool)
@@ -74,21 +74,21 @@ class AttributeCode(AttributeInfoEntry):
         self.attributes.build(f)
 
         return 2+2+4+self.code_length+2+8*self.exception_table_length+2+self.attributes.get_size_in_bytes()
-    
+
     def get_bytes(self):
         ret = super().get_bytes()
         ret += struct.pack(">h", self.max_stack)
         ret += struct.pack(">h", self.max_locals)
         ret += struct.pack(">i", self.code_length)
         ret += self.code
-        
+
         ret += struct.pack(">h", self.exception_table_length)
-        
+
         for t in self.exception_table:
             ret += t.get_bytes()
-        
+
         ret += struct.pack(">h", self.attributes_count)
         ret += self.attributes.get_bytes()
-        
+
         return ret
-        
+

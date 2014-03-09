@@ -24,6 +24,8 @@ tokens = (
     'STRING',
     'NUMBER',
     'HEXNUMBER',
+    'ARRAY',
+
 
     # Variable/field related
     'VAR',
@@ -41,6 +43,7 @@ tokens = (
     'IDENTIFIER',
 	'METHOD_START',
     'METHOD_IDENTIFIER',
+    'METHOD_NAME',
 #%token <identifier> METHOD_IDENTIFIER
 #%token <param> PARAMS
     'PARAMS',
@@ -311,6 +314,8 @@ t_STRING = r'["]([^\\"]+|\\.)*["]'
 
 # Rules for handling field/variable declaration
 t_stdecvar_ignore = '\t\r '
+
+t_stdecvar_ARRAY = r'[\[][1-9]*[\]]'
 
 def t_stdecvar_error(t):
     print("Illegal char '%s' on line %d" % (t.value[0], t.lineno))
