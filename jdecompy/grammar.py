@@ -96,7 +96,7 @@ def p_vars(p):
     pass
 
 def p_var(p):
-    '''var : VAR access_modifiers VAR_TYPE VAR_NAME'''
+    '''var : VAR access_modifiers RET_TYPE VAR_NAME'''
     print("%s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
 
     if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
