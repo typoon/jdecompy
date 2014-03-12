@@ -11,6 +11,6 @@ if __name__ == '__main__':
     c = ClassFile(sys.argv[1])
     c.load()
 
-    c.compile_from_string('public .int $meuint 10')
+    c.compile_from_string('.var static public int meuint')
     c.save('/tmp/', 'Ex2')
 

@@ -7,7 +7,8 @@ def t_error(t):
 
 
 states = (
-    ('stdecvar', 'exclusive'),
+    ('stt_var', 'exclusive'),
+    ('stt_access_mod', 'exclusive'),
 #    ('stddevmethod', 'exclusive'),
 )
 
@@ -323,11 +324,40 @@ def t_stdecvar_error(t):
 
 def t_stdecvar(t):
     r'[\.]var'
-    t.lexer.begin('stdecvar')
+    t.lexer.push('stt_var')
+    t.lexer.push('stt_access_mod')
     t.type = 'VAR'
     return t
 
-def t_stdecvar_newline(t):
+reserved_stt_access_mod = {
+    'public' : 'ACCESS_MODIFIER',
+    'private' : 'ACCESS_MODIFIER',
+    'protected' : 'ACCESS_MODIFIER',
+    'static' : 'ACCESS_MODIFIER',
+    'synthetic' : 'ACCESS_MODIFIER',
+    'volatile' : 'ACCESS_MODIFIER',
+    'transient' : 'ACCESS_MODIFIER',
+    'final' : 'ACCESS_MODIFIER',
+}
+
+def t_stt_access_mod_reserved(t):
+    r'[a-zA-Z]'
+    t.type = reserved_stt_access_mod(t.value, 'OTHER')
+
+    if t.type == OTHER: # We probably parsed the ret type
+        t.lexer.push('stt_ret_type')
+
+        # We need to reparse the current token. How to do that?
+
+    return t
+
+def t_stt_ret_type(t):
+    r'(\w+)(\.\w+)*'
+    t.type = 'RET_TYPE'
+
+    return t
+
+def t_stt_var_newline(t):
     r'\n'
     t.lexer.begin('INITIAL')
     t.lexer.lineno += len(t.value)

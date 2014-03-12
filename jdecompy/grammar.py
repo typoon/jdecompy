@@ -26,7 +26,7 @@ def p_start(p):
 #    pass
 
 def p_methods(p):
-    '''methods: methods method_start method_body method_end
+    '''methods : methods method_start method_body method_end
               | empty method_start method_body method_end'''
 
 
@@ -39,11 +39,12 @@ def p_method_start(p):
 def p_method_body(p):
     '''method_body : vars
                    | mnemonics'''
-    pass
+
+    print("Method body...")
 
 def p_method_body_2(p):
     '''method_body : vars mnemonics'''
-    pass
+    print("Method body 2")
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
@@ -58,6 +59,9 @@ def p_opcode(p):
     '''opcode : nop'''
     pass
 
+def p_nop(p):
+    '''nop : NOP'''
+    pass
 #opcode:
 #    nop
 #    | aconst_null
@@ -163,10 +167,11 @@ def p_error(p):
 
 def compile(classfile, code):
     global cf
+
     cf = classfile
     lexer = lex.lex(module=tok)
     parser = yacc.yacc(start='start')
-    r = parser.parse(code)
-    print(r)
+
+    parser.parse(code)
 
 
