@@ -29,11 +29,12 @@ def p_methods(p):
     '''methods : methods method_start method_body method_end
               | empty method_start method_body method_end'''
 
+    print("inside p_methods")
 
     pass
 
 def p_method_start(p):
-    '''method_start : METHOD_START access_modifiers RET_TYPE METHOD_NAME PARAMS'''
+    '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
     pass
 
 def p_method_body(p):
@@ -44,23 +45,28 @@ def p_method_body(p):
 
 def p_method_body_2(p):
     '''method_body : vars mnemonics'''
+
     print("Method body 2")
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
+
     pass
 
 def p_mnemonics(p):
     '''mnemonics : mnemonics opcode
                  | empty opcode'''
+
     pass
 
 def p_opcode(p):
     '''opcode : nop'''
+    print("opcode")
     pass
 
 def p_nop(p):
     '''nop : NOP'''
+    print("nop")
     pass
 #opcode:
 #    nop
@@ -96,7 +102,7 @@ def p_vars(p):
     pass
 
 def p_var(p):
-    '''var : VAR access_modifiers RET_TYPE VAR_NAME'''
+    '''var : VAR access_modifiers RET_TYPE IDENTIFIER'''
     print("%s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
 
     if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
@@ -106,7 +112,7 @@ def p_var(p):
     del p.modifiers
 
 def p_var_array(p):
-    '''var : VAR access_modifiers VAR_TYPE array_types VAR_NAME'''
+    '''var : VAR access_modifiers RET_TYPE array_types IDENTIFIER'''
     # TODO: Add arrays support
     print("Arrays not supported yet")
     raise SyntaxError
@@ -163,7 +169,10 @@ def p_access_modifiers(p):
 #     # cf.add_class_field([p[-1]], p[2], 'int')
 
 def p_error(p):
-    print("Unexpected token %s on line %d position %d (%s)" % (p.type, p.lineno, p.lexpos, p.value))
+    if p is None:
+        print("Unexpected end of file reached")
+    else:
+        print("Unexpected token %s on line %d position %d (%s)" % (p.type, p.lineno, p.lexpos, p.value))
 
 def compile(classfile, code):
     global cf

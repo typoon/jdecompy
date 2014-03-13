@@ -7,10 +7,10 @@ def t_error(t):
 
 
 states = (
-    ('sttvar', 'exclusive'),
+    ('sttvar', 'inclusive'),
+    ('sttmethod', 'exclusive'),
     ('sttaccessmod', 'exclusive'),
     ('sttrettype', 'exclusive'),
-#    ('stddevmethod', 'exclusive'),
 )
 
 tokens = (
@@ -32,7 +32,6 @@ tokens = (
     # Variable/field related
     'VAR',
     'VAR_NAME',
-    'VAR_TYPE',
 
     # Access modifiers
     'ACCESS_MODIFIER',
@@ -286,6 +285,9 @@ tokens = (
 	'HARDWARE'
 )
 
+# ---------------------------------------------------------
+# Rules for state INITIAL
+# ---------------------------------------------------------
 def t_NUMBER(t):
     r'[1-9]+[0-9]*'
     t.value = int(t.value)
@@ -297,9 +299,11 @@ def t_NUMBER(t):
 
     return t
 
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+
 
 def t_HEXNUMBER(t):
     r'0x[0-9a-fA-F]{1,8}'
@@ -312,18 +316,6 @@ def t_HEXNUMBER(t):
 
     return t
 
-t_STRING = r'["]([^\\"]+|\\.)*["]'
-
-
-# ---------------------------------------------------------
-# Rules for state sttvar 
-# ---------------------------------------------------------
-t_sttvar_ignore = '\t\r '
-t_sttvar_ARRAY = r'[\[][1-9]*[\]]'
-
-def t_sttvar_error(t):
-    print("Illegal char '%s' on line %d" % (t.value[0], t.lineno))
-
 
 def t_sttvar(t):
     r'[\.]var'
@@ -332,9 +324,31 @@ def t_sttvar(t):
     t.type = 'VAR'
     return t
 
-def t_sttvar_VAR_NAME(t):
-    r'[a-zA-Z]+'
+def t_sttmethod(t):
+    r'[\.]method'
+    t.lexer.push_state('sttmethod')
+    t.lexer.push_state('sttaccessmod')
+    t.type = 'METHOD_START'
     return t
+
+t_STRING = r'["]([^\\"]+|\\.)*["]'
+
+t_ANY_IDENTIFIER = r'\w+'
+
+# ---------------------------------------------------------
+# Rules for state sttvar 
+# ---------------------------------------------------------
+t_sttvar_ignore = '\t\r '
+t_sttvar_ARRAY = r'[\[][1-9]*[\]]'
+
+def t_sttvar_error(t):
+    print("Illegal variable declaration. Char '%s' on line %d" % (t.value[0], t.lineno))
+
+
+#def t_sttvar_VAR_NAME(t):
+#    r'\w+'
+#    return t
+
 
 def t_sttvar_newline(t):
     r'\n+'
@@ -342,77 +356,32 @@ def t_sttvar_newline(t):
     t.lexer.pop_state()
 
 # ---------------------------------------------------------
-# Rules for state sttaccessmod
+# Rules for state sttmethod
 # ---------------------------------------------------------
-t_sttaccessmod_ignore = '\t\r '
+t_sttmethod_ignore = '\t\r '
 
-reserved_sttaccessmod = {
-    'public' : 'ACCESS_MODIFIER',
-    'private' : 'ACCESS_MODIFIER',
-    'protected' : 'ACCESS_MODIFIER',
-    'static' : 'ACCESS_MODIFIER',
-    'synthetic' : 'ACCESS_MODIFIER',
-    'volatile' : 'ACCESS_MODIFIER',
-    'transient' : 'ACCESS_MODIFIER',
-    'final' : 'ACCESS_MODIFIER',
-}
-
-def t_sttaccessmod_reserved(t):
-    r'\w+'
-    t.type = reserved_sttaccessmod.get(t.value, 'OTHER')
-
-    if t.type == 'OTHER': # We probably parsed the ret type
-        t.lexer.pop_state()
-        t.lexer.push_state('sttrettype')
-        
-        # We need to reparse the current token. How to do that?
-        # I guess the following workaroundmight do it
-        t.lexer.skip(len(t.value)*-1)
-
-    else:
-        return t
+#def t_sttmethod_PARAMS(t):
+#    r'[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*'
+#    return t
 
 
-# ---------------------------------------------------------
-# Rules for state sttrettype
-# ---------------------------------------------------------
-t_sttrettype_ignore = '\t\r '
+def t_sttmethod_PARAMS(t):
+    r'[\(][0-9a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*'
+    return t
 
-def t_sttrettype_RET_TYPE(t):
-    r'(\w+)(\.\w+)*'
-    t.type = 'RET_TYPE'
+def t_sttmethod_error(t):
+    print("Illegal method declaration. Char '%s' on line %d" % (t.value[0], t.lineno))
+
+def t_sttmethod_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+def t_sttmethod_METHOD_END(t):
+    r'[\.]method_end'
     t.lexer.pop_state()
     return t
 
-reserved_stdecvar = {
-    'public' : 'ACCESS_MODIFIER',
-    'private' : 'ACCESS_MODIFIER',
-    'protected' : 'ACCESS_MODIFIER',
-    'static' : 'ACCESS_MODIFIER',
-    'synthetic' : 'ACCESS_MODIFIER',
-    'volatile' : 'ACCESS_MODIFIER',
-    'transient' : 'ACCESS_MODIFIER',
-    'final' : 'ACCESS_MODIFIER',
-
-    'byte' : 'VAR_TYPE',
-    'char' : 'VAR_TYPE',
-    'double' : 'VAR_TYPE',
-    'float' : 'VAR_TYPE',
-    'int' : 'VAR_TYPE',
-    'long' : 'VAR_TYPE',
-    'short' : 'VAR_TYPE',
-    'bool' : 'VAR_TYPE',
-}
-
-
-# End rules for field/variable declaration
-
-t_METHOD_START = r'[\.]method'
-t_METHOD_END = r'[\.]method_end'
-t_PARAMS = r'[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*'
-t_IDENTIFIER = r'[$][a-zA-Z_$]+'
-
-reserved = {
+opcodes = {
     # opcodes
     'nop'           :  'NOP',
     'aconst_null'   :  'ACONST_NULL',
@@ -446,10 +415,70 @@ reserved = {
     'invokestatic'  :  'INVOKESTATIC',
 }
 
-
-def t_METHOD_IDENTIFIER(t):
+def t_sttmethod_opcodes(t):
     r'[a-zA-Z]+'
-    t.type = reserved.get(t.value, 'METHOD_IDENTIFIER')
+    t.type = opcodes.get(t.value, 'IDENTIFIER')
+
+    print(vars(t))
+    return t
+
+
+
+
+# ---------------------------------------------------------
+# Rules for state sttaccessmod
+# ---------------------------------------------------------
+t_sttaccessmod_ignore = '\t\r '
+
+reserved_sttaccessmod = {
+    'public'    : 'ACCESS_MODIFIER',
+    'private'   : 'ACCESS_MODIFIER',
+    'protected' : 'ACCESS_MODIFIER',
+    'static'    : 'ACCESS_MODIFIER',
+    'synthetic' : 'ACCESS_MODIFIER',
+    'volatile'  : 'ACCESS_MODIFIER',
+    'transient' : 'ACCESS_MODIFIER',
+    'final'     : 'ACCESS_MODIFIER',
+}
+
+
+def t_sttaccessmod_error(t):
+    print("Illegal access modifier declaration. Char '%s' on line %d" % (t.value[0], t.lineno))
+
+
+def t_sttaccessmod_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+    t.lexer.pop_state()
+
+def t_sttaccessmod_reserved(t):
+    r'\w+'
+    t.type = reserved_sttaccessmod.get(t.value, 'OTHER')
+
+    if t.type == 'OTHER': # We probably parsed the ret type
+        t.lexer.pop_state()
+        t.lexer.push_state('sttrettype')
+        
+        # We need to reparse the current token. How to do that?
+        # I guess the following workaround might do it
+        t.lexer.skip(len(t.value)*-1)
+
+    else:
+        return t
+
+
+# ---------------------------------------------------------
+# Rules for state sttrettype
+# ---------------------------------------------------------
+t_sttrettype_ignore = '\t\r '
+
+def t_sttrettype_error(t):
+    print("Invalid type. Char '%s' on line %d" % (t.value[0], t.lineno))
+
+def t_sttrettype_RET_TYPE(t):
+    r'(\w+)(\.\w+)*'
+    t.type = 'RET_TYPE'
+    t.lexer.pop_state()
     return t
 
 
