@@ -2,9 +2,11 @@ import ply.yacc as yacc
 import ply.lex as lex
 import tokens as tok
 from tokens import tokens
+from opcodes import opc_compile
 
 
 cf = None
+g_code = b''
 
 def p_empty(p):
     '''empty :'''
@@ -35,7 +37,10 @@ def p_methods(p):
 
 def p_method_start(p):
     '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
-    pass
+    if not hasattr(p, 'code'):
+        p.code = b''
+
+    print("p.code = ", p.code)
 
 def p_method_body(p):
     '''method_body : vars
@@ -51,6 +56,7 @@ def p_method_body_2(p):
 def p_method_end(p):
     '''method_end : METHOD_END'''
 
+    print("p.code = ", p.code)
     pass
 
 def p_mnemonics(p):
@@ -66,8 +72,9 @@ def p_opcode(p):
 
 def p_nop(p):
     '''nop : NOP'''
+    p.code += opc_compile(p[1])
     print("nop")
-    pass
+
 #opcode:
 #    nop
 #    | aconst_null

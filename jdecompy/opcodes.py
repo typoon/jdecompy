@@ -258,3 +258,27 @@ OPC[253] = {'num_args': 0, 'name' : 'reserved'}
 OPC[254] = {'num_args': 0, 'name' : 'software'}
 OPC[255] = {'num_args': 0, 'name' : 'hardware'}
 
+# TODO: Find a better place to put this
+def get_opcode(opcode):
+    for el in OPC:
+        if OPC[el]['name'] == opcode:
+            print(el, OPC[el])
+            return (el, OPC[el])
+    
+    return (None,None)
+
+def opc_compile(opcode, args = None):
+    index, opcode = get_opcode(opcode)
+    ret = b''
+
+    print(index, OPC[index])
+    if opcode['num_args'] < 0:
+        # TODO: Special treatment for these cases here
+        pass
+
+    if opcode['name'] == 'nop':
+        ret = "\x00"
+
+opc_compile('nop')
+    
+
