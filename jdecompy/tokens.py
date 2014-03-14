@@ -381,6 +381,14 @@ def t_sttmethod_METHOD_END(t):
     t.lexer.pop_state()
     return t
 
+def t_sttmethod_sttvar(t):
+    r'[\.]var'
+    t.lexer.push_state('sttvar')
+    t.lexer.push_state('sttaccessmod')
+    t.type = 'VAR'
+    return t
+
+
 opcodes = {
     # opcodes
     'nop'           :  'NOP',
@@ -416,7 +424,7 @@ opcodes = {
 }
 
 def t_sttmethod_opcodes(t):
-    r'[a-zA-Z]+'
+    r'[_0-9a-zA-Z]+'
     t.type = opcodes.get(t.value, 'IDENTIFIER')
 
     print(vars(t))

@@ -10,6 +10,9 @@ if __name__ == '__main__':
     c.load()
 
     c.compile_from_string('''.method public void main (arg) 
+                                 .var int x
                                  nop
+                                 aconst_null
+                                 iconst_m1
                              .method_end''')
 

@@ -271,14 +271,11 @@ def opc_compile(opcode, args = None):
     index, opcode = get_opcode(opcode)
     ret = b''
 
-    print(index, OPC[index])
     if opcode['num_args'] < 0:
         # TODO: Special treatment for these cases here
         pass
 
     if opcode['name'] == 'nop':
-        ret = "\x00"
+        ret = b'\x00'
 
-opc_compile('nop')
-    
-
+    return ret
