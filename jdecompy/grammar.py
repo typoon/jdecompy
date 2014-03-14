@@ -4,9 +4,19 @@ import tokens as tok
 from tokens import tokens
 from opcodes import opc_compile
 
+# TODO: Should this be here? And should it be called MethodTree?
+class MethodTree:
+    def __init__(self):
+        self.access_modifiers = []
+        self.ret_type = ''
+        self.name = ''
+        self.params = ''
+        self.variables = []
+        self.code = b''
+
 
 cf = None
-g_code = b''
+g_method = MethodTree()
 
 def p_empty(p):
     '''empty :'''
@@ -48,22 +58,20 @@ def p_methods(p):
 
 def p_method_start(p):
     '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
-    if not hasattr(p, 'code'):
-        p.code = b''
-
-    print("p.code = ", p.code)
+    g_method.access_modifiers = p[2]
+    g_method.ret_type = p[3]
+    g_method.name = p[4]
+    g_method.params = p[5]
 
 def p_method_body(p):
     '''method_body : vars
-                   | mnemonics'''
+                   | empty mnemonics
+                   | vars mnemonics'''
 
-    p[0] = p[1]
+    # TODO: Maybe this should be in p_mnemonics?
+    g_method.code = p[2]
     print("Method body... p[0] ", p[0])
 
-def p_method_body_2(p):
-    '''method_body : vars mnemonics'''
-
-    print("Method body 2")
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
@@ -89,44 +97,6 @@ def p_opcode(p):
               | iconst_m1'''
     p[0] = p[1]
     print("opcode: p[0] ", p[0])
-
-# ----------------------------------------------------------------------------
-# Opcodes parsing
-# ----------------------------------------------------------------------------
-def p_nop(p):
-    '''nop : NOP'''
-    p[0] = opc_compile(p[1])
-    print("Nop: p[0] ", p[0])
-
-def p_aconst_null(p):
-    '''aconst_null : ACONST_NULL'''
-    p[0] = b'\x01'
-    print("aconst_null: p[0]", p[0])
-
-def p_iconst_m1(p):
-    '''iconst_m1 : ICONST_M1'''
-    p[0] = b'\x02'
-    print("iconst_m1: p[0]", p[0])
-
-
-
-# ----------------------------------------------------------------------------
-# Class fields parsing
-# ----------------------------------------------------------------------------
-def p_fields(p):
-    '''fields : fields field
-              | empty field'''
-    pass
-
-def p_field(p):
-    '''field : VAR access_modifiers RET_TYPE IDENTIFIER'''
-    print("FIELD: %s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
-
-    if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
-        print(cf.get_error())
-        raise SyntaxError
-
-    del p.modifiers
 
 
 # ----------------------------------------------------------------------------
@@ -157,6 +127,24 @@ def p_array_types(p):
                    | empty ARRAY'''
     pass
 
+# ----------------------------------------------------------------------------
+# Opcodes parsing
+# ----------------------------------------------------------------------------
+def p_nop(p):
+    '''nop : NOP'''
+    p[0] = opc_compile(p[1])
+    print("Nop: p[0] ", p[0])
+
+def p_aconst_null(p):
+    '''aconst_null : ACONST_NULL'''
+    p[0] = b'\x01'
+    print("aconst_null: p[0]", p[0])
+
+def p_iconst_m1(p):
+    '''iconst_m1 : ICONST_M1'''
+    p[0] = b'\x02'
+    print("iconst_m1: p[0]", p[0])
+
 
 # ----------------------------------------------------------------------------
 # Access modifiers for class/fields parsing
@@ -170,6 +158,26 @@ def p_access_modifiers(p):
         p.modifiers = []
 
     p.modifiers.append(p[2])
+
+# ----------------------------------------------------------------------------
+# Class fields parsing
+# ----------------------------------------------------------------------------
+def p_fields(p):
+    '''fields : fields field
+              | empty field'''
+    pass
+
+def p_field(p):
+    '''field : VAR access_modifiers RET_TYPE IDENTIFIER'''
+    print("FIELD: %s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
+
+    if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
+        print(cf.get_error())
+        raise SyntaxError
+
+    del p.modifiers
+
+
 
 
 # ----------------------------------------------------------------------------
