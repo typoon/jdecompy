@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 import ply.lex as lex
-import tokens as tok
-from tokens import tokens
+import compiler.tokens as tok
+from compiler.tokens import tokens
 from opcodes import opc_compile
 
 # TODO: Should this be here? And should it be called MethodTree?

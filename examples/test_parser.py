@@ -2,7 +2,7 @@ import sys
 sys.path.append('../')
 
 from jdecompy.classfile import ClassFile
-import jdecompy.grammar as parser
+import jdecompy.compiler.grammar as parser
 
 
 if __name__ == '__main__':

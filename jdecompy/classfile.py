@@ -1,6 +1,6 @@
 import sys
 import struct
-import grammar
+import compiler.grammar as grammar
 from constants import *
 from constantpool import ConstantPool
 from fieldinfo import FieldInfo
