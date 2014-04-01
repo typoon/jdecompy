@@ -67,8 +67,6 @@ class ConstantPool:
         name_and_type_info.descriptor_index = descriptor_index
         name_and_type_info._constant_pool = self
 
-        print(vars(name_and_type_info))
-
         self._count += 1
         self.entries.append(name_and_type_info)
 

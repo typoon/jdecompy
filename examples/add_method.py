@@ -11,6 +11,7 @@ if __name__ == '__main__':
     c = ClassFile(sys.argv[1])
     c.load()
 
-    c.compile_from_string('public .method myMethod ()V')
+    c.compile_from_string('''.method public void myMethod()
+                             .method_end''')
     c.save('/tmp/', 'Ex2')
 

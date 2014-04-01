@@ -210,6 +210,8 @@ class ClassFile:
         self.constant_pool.entries[name_index].length = len(name)
         self.constant_pool.entries[name_index].bytes = name.encode('utf-8')
 
+    # TODO: This method should get a FieldInfo parameter instead of what it
+    #       does now
     def add_class_field(self, access_modifiers, type, name):
         """ Add a new field to the class and returns it to the caller """
         field = FieldInfo(self.constant_pool)
@@ -270,10 +272,21 @@ class ClassFile:
         return field
 
     def add_method(self, access_flags, name, signature, code):
+        
+
+
         pass
 
     def save(self, path, classname):
         self.rename_class(classname)
+
+        # TODO: This is a hack, as the methods inside the constant_pool
+        #       do not have access to the classfile.constant_pool_count
+        #       I need to update the count here to reflect the correct 
+        #       value. There is probably a better way to do this, but I
+        #       am not sure what it is right now. Need to think
+
+        self.constant_pool_count = self.constant_pool._count
 
         buf = self.get_bytes()
         path = '/%s/%s.class' % (path, classname)

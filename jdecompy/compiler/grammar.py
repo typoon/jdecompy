@@ -3,6 +3,7 @@ import ply.lex as lex
 import compiler.tokens as tok
 from compiler.tokens import tokens
 from opcodes import opc_compile
+from methodinfo import MethodInfo
 
 # TODO: Should this be here? And should it be called MethodTree?
 class MethodTree:
@@ -54,6 +55,11 @@ def p_methods(p):
     print("p[3]", p[3])
     print("p[4]", p[4])
 
+    cp = cf.constant_pool
+    mi = MethodInfo(cp)
+    mi.access_flags = ClassFileHelper.translate_access_flags(g_method.access_modifiers)
+    mi.name_index = cp.add_utf8info(g_method.name, len(g_method.name))
+
     pass
 
 def p_method_start(p):
@@ -63,18 +69,23 @@ def p_method_start(p):
     g_method.name = p[4]
     g_method.params = p[5]
 
+
 def p_method_body(p):
     '''method_body : vars
                    | empty mnemonics
-                   | vars mnemonics'''
+                   | vars mnemonics
+                   | empty'''
 
     # TODO: Maybe this should be in p_mnemonics?
+    if p[1] is None:
+        return
     g_method.code = p[2]
-    print("Method body... p[0] ", p[0])
+    print("Method body... p[0] ", p[2])
 
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
+    # TODO: All magic to handle the MethodTree object should happen here
 
     pass
 
@@ -176,8 +187,6 @@ def p_field(p):
         raise SyntaxError
 
     del p.modifiers
-
-
 
 
 # ----------------------------------------------------------------------------

@@ -8,9 +8,11 @@ from constants import *
 class MethodInfo:
     """
     access_flags
-    name_index
-    descriptor_index
-    attributes_count
+    name_index - Points to an Utf8Info containing the unqualified method 
+                 name
+    descriptor_index - Points to an Utf8Info representing a valid method 
+                       descriptor
+    attributes_count - Number of items in the attributes list
     attributes - list of AttributeInfo structures
     """
     access_flags = 0      # 2 bytes
