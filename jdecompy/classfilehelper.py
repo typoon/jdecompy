@@ -1,3 +1,5 @@
+from constants import *
+
 class ClassFileHelper:
 
     @staticmethod

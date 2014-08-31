@@ -4,6 +4,7 @@ import compiler.tokens as tok
 from compiler.tokens import tokens
 from opcodes import opc_compile
 from methodinfo import MethodInfo
+from classfilehelper import ClassFileHelper
 
 # TODO: Should this be here? And should it be called MethodTree?
 class MethodTree:
@@ -47,24 +48,18 @@ def p_start(p):
 # ----------------------------------------------------------------------------
 def p_methods(p):
     '''methods : methods method_start method_body method_end
-              | empty method_start method_body method_end'''
-
-    print("inside p_methods")
-    print("p[1]", p[1])
-    print("p[2]", p[2])
-    print("p[3]", p[3])
-    print("p[4]", p[4])
+               | empty method_start method_body method_end'''
 
     cp = cf.constant_pool
     mi = MethodInfo(cp)
     mi.access_flags = ClassFileHelper.translate_access_flags(g_method.access_modifiers)
     mi.name_index = cp.add_utf8info(g_method.name, len(g_method.name))
 
-    pass
 
 def p_method_start(p):
     '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
-    g_method.access_modifiers = p[2]
+    print("Inside p_method_start")
+    #g_method.access_modifiers = p[2]
     g_method.ret_type = p[3]
     g_method.name = p[4]
     g_method.params = p[5]
@@ -76,16 +71,18 @@ def p_method_body(p):
                    | vars mnemonics
                    | empty'''
 
+    print("Inside p_method_body")
     # TODO: Maybe this should be in p_mnemonics?
     if p[1] is None:
         return
     g_method.code = p[2]
-    print("Method body... p[0] ", p[2])
+    print("Method body... p[2] ", p[2])
 
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
     # TODO: All magic to handle the MethodTree object should happen here
+    print("Inside p_method_end")
 
     pass
 
@@ -165,10 +162,8 @@ def p_access_modifiers(p):
                          | empty ACCESS_MODIFIER
                          | empty'''
 
-    if not hasattr(p, 'modifiers'):
-        p.modifiers = []
-
-    p.modifiers.append(p[2])
+    print("Adding access_modifier: ", p[2])
+    g_method.access_modifiers.append(p[2])
 
 # ----------------------------------------------------------------------------
 # Class fields parsing
