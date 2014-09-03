@@ -52,6 +52,7 @@ def p_methods(p):
 
     cp = cf.constant_pool
     mi = MethodInfo(cp)
+
     mi.access_flags = ClassFileHelper.translate_access_flags(g_method.access_modifiers)
     mi.name_index = cp.add_utf8info(g_method.name, len(g_method.name))
 
@@ -83,6 +84,7 @@ def p_method_end(p):
     '''method_end : METHOD_END'''
     # TODO: All magic to handle the MethodTree object should happen here
     print("Inside p_method_end")
+    g_method = MethodTree()
 
     pass
 

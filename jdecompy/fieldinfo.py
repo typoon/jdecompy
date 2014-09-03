@@ -25,11 +25,6 @@ class FieldInfo:
         self._constant_pool = constant_pool
         self.attributes = AttributeInfo(constant_pool)
 
-    def get_field_type(self):
-        info = self._constant_pool.entries[self.descriptor_index].get_bytes_as_str()
-        #return info
-        return ConstantPoolUtils.parse_field_type(info)
-
     def __str__(self):
         ret = 'FieldInfo: '
         ret += self.get_field_type() + ' '
@@ -50,6 +45,11 @@ class FieldInfo:
         print("Attributes count: ", self.attributes_count)
         print(self)
         self.attributes.build(f)
+
+    def get_field_type(self):
+        info = self._constant_pool.entries[self.descriptor_index].get_bytes_as_str()
+        #return info
+        return ConstantPoolUtils.parse_field_type(info)
 
     def get_bytes(self):
         ret = b''

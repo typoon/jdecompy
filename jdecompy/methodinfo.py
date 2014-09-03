@@ -19,7 +19,7 @@ class MethodInfo:
     name_index = 0        # 2 bytes
     descriptor_index = 0  # 2 bytes
     attributes_count = 0  # 2 bytes
-    attributes = None       # variable
+    attributes = None     # variable
 
     def __init__(self, constant_pool):
         self.access_flags = 0
