@@ -47,3 +47,28 @@ class ClassFileHelper:
                 access_flags |= ACC_INTERFACE
 
         return access_flags
+
+    @staticmethod
+    def translate_type(type):
+        if type == 'byte':
+            type = 'B'
+        elif type == 'char':
+            type = 'C'
+        elif type == 'double':
+            type = 'D'
+        elif type == 'float':
+            type = 'F'
+        elif type == 'int':
+            type = 'I'
+        elif type == 'long':
+            type = 'L'
+        elif type == 'short':
+            type = 'S'
+        elif type == 'bool':
+            type = 'Z'
+
+        # TODO: if type has a '.' in it, it should be replaced with a /
+
+        return type
+
+

@@ -4,6 +4,7 @@ import compiler.tokens as tok
 from compiler.tokens import tokens
 from opcodes import opc_compile
 from methodinfo import MethodInfo
+from fieldinfo import FieldInfo
 from classfilehelper import ClassFileHelper
 
 # TODO: Should this be here? And should it be called MethodTree?
@@ -165,7 +166,8 @@ def p_access_modifiers(p):
                          | empty'''
 
     print("Adding access_modifier: ", p[2])
-    g_method.access_modifiers.append(p[2])
+    if p[2]:
+        g_method.access_modifiers.append(p[2])
 
 # ----------------------------------------------------------------------------
 # Class fields parsing
@@ -177,13 +179,23 @@ def p_fields(p):
 
 def p_field(p):
     '''field : VAR access_modifiers RET_TYPE IDENTIFIER'''
-    print("FIELD: %s %s %s %s" % (p[1], p.modifiers, p[3], p[4]))
+    print("FIELD: %s %s %s %s" % (p[1], p[2], p[3], p[4]))
 
-    if cf.add_class_field(p.modifiers, p[3], p[4]) is None:
-        print(cf.get_error())
-        raise SyntaxError
+    cp = cf.constant_pool
 
-    del p.modifiers
+    name = p[4]
+    ret_type = ClassFileHelper.translate_type(p[3])
+    access_flags = ClassFileHelper.translate_access_flags(g_method.access_modifiers)
+    name_and_type_index = cp.add_nameandtypeinfo(name, ret_type)
+    name_and_type_info  = cp.entries[name_and_type_index]
+
+    field = FieldInfo(cp)
+    field.access_flags = access_flags
+    field.name_index = name_and_type_info.name_index
+    field.descriptor_index = name_and_type_info.descriptor_index
+    field.attributes_count = 0
+
+    cf.add_class_field(field)
 
 
 # ----------------------------------------------------------------------------

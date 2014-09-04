@@ -212,64 +212,11 @@ class ClassFile:
 
     # TODO: This method should get a FieldInfo parameter instead of what it
     #       does now
-    def add_class_field(self, access_modifiers, type, name):
+    def add_class_field(self, field):
         """ Add a new field to the class and returns it to the caller """
-        field = FieldInfo(self.constant_pool)
-
-        if type == 'byte':
-            type = 'B'
-        elif type == 'char':
-            type = 'C'
-        elif type == 'double':
-            type = 'D'
-        elif type == 'float':
-            type = 'F'
-        elif type == 'int':
-            type = 'I'
-        elif type == 'long':
-            type = 'L'
-        elif type == 'short':
-            type = 'S'
-        elif type == 'bool':
-            type = 'Z'
-
-        # TODO: if type has a '.' in it, it should be replaced with a /
-
-        name_and_type_index = self.constant_pool.add_nameandtypeinfo(name, type)
-        name_and_type_info = self.constant_pool.entries[name_and_type_index]
-
-
-        access_flags = 0
-        # TODO: Need to validate if the modifiers conflict with each other 
-        # (such as being public and private at the same time). If so, need
-        # to call self.set_error and return None
-        for am in access_modifiers:
-            if am == 'public':
-                access_flags |= ACC_PUBLIC
-            elif am == 'protected':
-                access_flags |= ACC_PROTECTED
-            elif am == 'private':
-                access_flags |= ACC_PRIVATE
-            elif am == 'static':
-                access_flags |= ACC_STATIC
-            elif am == 'final':
-                access_flags |= ACC_FINAL
-            else:
-                access_flags |= ACC_PUBLIC # TODO Should I really do this?
-            # TODO: Seems there are some others missing here, such as Synthetic, Bridge, and others
-
-        field.access_flags = access_flags
-        field.name_index = name_and_type_info.name_index
-        field.descriptor_index = name_and_type_info.descriptor_index
-        field.attributes_count = 0
-
-        # TODO: Looks like a fieldrefinfo is also needed
-
         self.fields.append(field)
         self.fields_count += 1
         self.constant_pool_count = self.constant_pool._count
-
-        return field
 
     def add_method(self, access_flags, name, signature, code):
         
@@ -298,5 +245,3 @@ class ClassFile:
         except IOError:
             print("Could not save file %s" % path)
  
-
-        
