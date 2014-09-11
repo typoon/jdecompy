@@ -210,8 +210,6 @@ class ClassFile:
         self.constant_pool.entries[name_index].length = len(name)
         self.constant_pool.entries[name_index].bytes = name.encode('utf-8')
 
-    # TODO: This method should get a FieldInfo parameter instead of what it
-    #       does now
     def add_class_field(self, field):
         """ Add a new field to the class and returns it to the caller """
         self.fields.append(field)
@@ -219,9 +217,6 @@ class ClassFile:
         self.constant_pool_count = self.constant_pool._count
 
     def add_method(self, access_flags, name, signature, code):
-        
-
-
         pass
 
     def save(self, path, classname):
