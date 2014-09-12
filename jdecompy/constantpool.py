@@ -12,12 +12,6 @@ class ConstantPool:
         self._file = None
         self._size_in_bytes = 0
 
-    def set_count(self, count):
-        self._count = count
-
-    def get_size_in_bytes(self):
-        return self._size_in_bytes
-
     def _build(self, f):
         """
         Builds the constant pool representation in this object
@@ -47,10 +41,16 @@ class ConstantPool:
 
             i += 1
 
+    def set_count(self, count):
+        self._count = count
+
+    def get_size_in_bytes(self):
+        return self._size_in_bytes
+
     def get_bytes(self):
         ret = b''
 
-        print(len(self.entries))
+        #print(len(self.entries))
 
         for e in self.entries[1:]:
             ret += e.get_bytes()
@@ -84,14 +84,14 @@ class ConstantPool:
         for i in self.entries[1:]:
             if i.tag == CONSTANT_UTF8:
                 if i.bytes == utf8.bytes:
-                    print("Index %d found for string %s" % (index, string))
+                    #print("Index %d found for string %s" % (index, string))
                     return index
 
             index += 1
 
-        print("Count is %d" % self._count)
+        #print("Count is %d" % self._count)
         self._count += 1
-        print("Incremented count to %d" % self._count)
+        #print("Incremented count to %d" % self._count)
         self.entries.append(utf8)
 
         return self._count-1

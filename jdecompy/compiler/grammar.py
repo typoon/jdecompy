@@ -56,15 +56,23 @@ def p_methods(p):
 
     mi.access_flags = ClassFileHelper.translate_access_flags(g_method.access_modifiers)
     mi.name_index = cp.add_utf8info(g_method.name, len(g_method.name))
+    mi.descriptor_index = 0  # 2 bytes
+    mi.attributes_count = 0  # 2 bytes
+    mi.attributes = None     # variable
 
 
 def p_method_start(p):
     '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
     print("Inside p_method_start")
-    #g_method.access_modifiers = p[2]
+    g_method.access_modifiers = p[2]
     g_method.ret_type = p[3]
     g_method.name = p[4]
     g_method.params = p[5]
+
+    print("access_modifiers = ", g_method.access_modifiers)
+    print("ret_type = ", g_method.ret_type)
+    print("name = ", g_method.name)
+    print("params = ", g_method.params)
 
 
 def p_method_body(p):

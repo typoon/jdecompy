@@ -39,11 +39,11 @@ class FieldInfo:
         self.attributes_count = int.from_bytes(f.read(2), byteorder="big")
 
         self.attributes.set_count(self.attributes_count)
-        print("Access flags: %d" % self.access_flags)
-        print("Name index %d" % self.name_index)
-        print("Descriptor index %d" % self.descriptor_index)
-        print("Attributes count: ", self.attributes_count)
-        print(self)
+        #print("Access flags: %d" % self.access_flags)
+        #print("Name index %d" % self.name_index)
+        #print("Descriptor index %d" % self.descriptor_index)
+        #print("Attributes count: ", self.attributes_count)
+        #print(self)
         self.attributes.build(f)
 
     def get_field_type(self):

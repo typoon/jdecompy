@@ -52,7 +52,7 @@ class MethodInfo:
         code_attr = self.get_code_attr()
         if code_attr:
             c = code_attr.code
-            print("Code len: %d" % code_attr.code_length)
+            #print("Code len: %d" % code_attr.code_length)
 
         return c
 
@@ -75,9 +75,9 @@ class MethodInfo:
             opc = OPC[opc_index]
 
             asm += opc['name']
-            #print("opc %s" % opc['name'])
-            #print("opc %s args %d" % (opc['name'], opc['num_args']))
-            #print("count = %d" % count)
+            ##print("opc %s" % opc['name'])
+            ##print("opc %s args %d" % (opc['name'], opc['num_args']))
+            ##print("count = %d" % count)
 
             if opc['name'] == "lookupswitch":
 
@@ -87,16 +87,16 @@ class MethodInfo:
                 if pad == 4:
                     pad = 0
 
-                print("Pad: %d - Count %d" % (pad,count))
+                #print("Pad: %d - Count %d" % (pad,count))
                 for i in range(pad):
                     _, b = next(e)
-                    print(' ' + str(hex(b)))
+                    #print(' ' + str(hex(b)))
                     asm += ' ' + str(hex(b))
 
                 # Read the default bytes here
                 for i in range(4):
                     _, b = next(e)
-                    print(' ' + str(hex(b)))
+                    #print(' ' + str(hex(b)))
                     asm += ' ' + str(hex(b))
 
                 # Read the npairs bytes
@@ -118,7 +118,7 @@ class MethodInfo:
                 asm += ' ' + str(hex(b))
                 total_pairs |= b  
 
-                print("Total pairs %d" % total_pairs)
+                #print("Total pairs %d" % total_pairs)
 
                 # Each npair consists of a 32 bit int match + 32 bit int offset
                 # hence the total_pairs*8
@@ -135,16 +135,16 @@ class MethodInfo:
                 if pad == 4:
                     pad = 0
 
-                print("Pad: %d - Count %d" % (pad,count))
+                #print("Pad: %d - Count %d" % (pad,count))
                 for i in range(pad):
                     _, b = next(e)
-                    print(' ' + str(hex(b)))
+                    #print(' ' + str(hex(b)))
                     asm += ' ' + str(hex(b))
 
                 # Read the default bytes here
                 for i in range(4):
                     _, b = next(e)
-                    print(' ' + str(hex(b)))
+                    #print(' ' + str(hex(b)))
                     asm += ' ' + str(hex(b))
 
                 # Read the low bytes
@@ -248,7 +248,7 @@ class MethodInfo:
             asm += "\n\t"
 
         if abort:
-            print(asm)
+            #print(asm)
             sys.exit(2)
         return asm
     

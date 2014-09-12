@@ -43,12 +43,13 @@ class ClassFile:
         try:
             self._file = open(self._file_path, mode="rb")
         except IOError:
-            print("Error opening file ", self._file_path)
-            print("Exception: ", sys.exc_info())
-            print("Aborting...")
-            sys.exit(-1)
+            error = "Error opening file %s : %s" % (self._file_path, str(sys.exc_info()[1]))
+            self.set_error(error)
+            return False
 
-        self._read_magic()
+        if not self._read_magic():
+            return False
+
         self._read_minor_version()
         self._read_major_version()
         self._read_constant_pool_count()
@@ -65,12 +66,17 @@ class ClassFile:
         self._read_attributes_count()
         self._read_attributes()
 
+        return True
+
     def _read_magic(self):
         self._file.seek(0)
         self.magic = self._file.read(4)
 
         if self.magic != b'\xca\xfe\xba\xbe':
-            print("Error, magic signature does not match 0xCAFEBABE")
+            self.set_error("Error, magic signature does not match 0xCAFEBABE")
+            return False
+
+        return True
 
     def _read_minor_version(self):
         self._file.seek(4)
@@ -148,7 +154,6 @@ class ClassFile:
         self.attributes = AttributeInfo(self.constant_pool)
         self.attributes.set_count(self.attributes_count)
         self.attributes.build(self._file)
-        print(self._file.tell())
 
     def set_error(self, message):
         self._error = message
@@ -191,13 +196,12 @@ class ClassFile:
         try:
             f = open(path, mode="r")
         except IOError:
-            print("Cannot open file %s" % path)
-            print("Exception: ", sys.exc_info())
-            print("Aborting...")
-            sys.exit(-1)
+            self.set_error("Cannot open file %s : %s" % (path, sys.exc_info()[1]))
+            return False
 
         code = f.read()
         self.compile_from_string(code)
+        return True
 
     def compile_from_string(self, code):
         grammar.compile(self, code)
@@ -238,5 +242,8 @@ class ClassFile:
             f.write(buf)
             f.close()
         except IOError:
-            print("Could not save file %s" % path)
+            self.set_error("Could not save file %s" % path)
+            return False
+
+        return True
  
