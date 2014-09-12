@@ -35,7 +35,7 @@ def help(argv):
     print("  -c index       Prints the code of the method specified by index.")
     print("                 index is obtained from running this program with")
     print("                 the -m option. You can pass more than one index")
-    print("                 by separating them using a coma, i.e: -c 1,2,10")
+    print("                 by separating them using a comma, i.e: -c 1,2,10")
 
 def print_info(cf):
     print("Magic word: ", cf.magic)
@@ -63,6 +63,10 @@ def print_method_list(cf):
 def print_method_code(cf, idx):
     print("%s" % (cf.methods[i].get_method_signature()))
     print(cf.methods[idx].get_code_asm())
+
+def print_cp(cf, idx):
+    print("[%d] %s" % (idx, cf.constant_pool.entries[idx]))
+    pass
 
 #--------------------------------------------------------------------
 # Main code
@@ -111,6 +115,21 @@ for opt, arg in opts:
         print_presentation_line("METHODS LIST")
         print_method_list(cf)
         print_presentation_line("END METHODS LIST")
+
+    if opt == "-p":
+        arg = arg.split(",")
+        print_presentation_line("CONSTANT POOL")
+
+        if arg == ['--']:
+            for i in range(1, cf.constant_pool_count):
+                print_cp(cf, i)
+        else:
+            for i in arg:
+                i = int(i)
+                print_cp(cf, i)
+
+        print_presentation_line("END CONSTANT POOL")
+
 
     if opt == "-c":
         arg = arg.split(",")

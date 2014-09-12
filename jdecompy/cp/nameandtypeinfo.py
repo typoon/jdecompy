@@ -26,7 +26,7 @@ class NameAndTypeInfo(ConstantPoolEntry):
         return 4
 
     def get_name(self):
-        print("Name index: %d" % self.name_index)
+        #print("Name index: %d" % self.name_index)
         return self._constant_pool.entries[self.name_index].get_bytes_as_str()
 
     def get_descriptor(self):
