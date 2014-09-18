@@ -29,10 +29,10 @@ def help(argv):
     print("  -i | --info    Prints information about the class file")
     print("  -m             Lists all methods in the class file together with")
     print("                 an index that can be used with the -c option")
-    print("  -p index       Prints the content of the constant pool on index.")
+    print("  -c index       Prints the content of the constant pool on index.")
     print("                 If no index is provided, then the whole constant")    
     print("                 pool is printed")    
-    print("  -c index       Prints the code of the method specified by index.")
+    print("  -a index       Prints the code of the method specified by index.")
     print("                 index is obtained from running this program with")
     print("                 the -m option. You can pass more than one index")
     print("                 by separating them using a comma, i.e: -c 1,2,10")
@@ -80,7 +80,7 @@ _method_index = 0
 _cp_index = 0
 _code_index = 0
 
-opt_str = "ihfmp::c::"
+opt_str = "ihfmc::a::"
 long_opts = ["info", "help", "full"]
 opts, args = getopt.getopt(sys.argv[1:], opt_str, long_opts)
 
@@ -116,7 +116,7 @@ for opt, arg in opts:
         print_method_list(cf)
         print_presentation_line("END METHODS LIST")
 
-    if opt == "-p":
+    if opt == "-c":
         arg = arg.split(",")
         print_presentation_line("CONSTANT POOL")
 
@@ -131,13 +131,20 @@ for opt, arg in opts:
         print_presentation_line("END CONSTANT POOL")
 
 
-    if opt == "-c":
+    if opt == "-a":
         arg = arg.split(",")
-        for i in arg:
-            print_presentation_line("METHOD")
-            i = int(i)
-            print_method_code(cf, i)
-            print_presentation_line("END METHOD")
+
+        print_presentation_line("METHOD")
+
+        if arg == ['--']:
+            for i in range(0, cf.methods_count):
+                print_method_code(cf, i)
+        else:
+            for i in arg:
+                i = int(i)
+                print_method_code(cf, i)
+
+        print_presentation_line("END METHOD")
 
     print("")
 
