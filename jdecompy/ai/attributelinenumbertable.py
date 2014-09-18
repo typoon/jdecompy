@@ -9,8 +9,8 @@ class AttributeLineNumberTable(AttributeInfoEntry):
         line_number - the number of the line in the source code file
         """
         def __init__(self):
-            self.start_pc = 0
-            self.line_number = 0
+            self.start_pc = 0    # 2 bytes
+            self.line_number = 0 # 2 bytes
 
         def populate(self, f):
             self.start_pc = int.from_bytes(f.read(2), byteorder="big")

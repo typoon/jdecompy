@@ -6,7 +6,7 @@ class IntegerInfo(ConstantPoolEntry):
     """
     value - is the value of the integer
     """
-    value = 0
+    value = 0 # 4 bytes
 
     def __init__(self):
         super().__init__()

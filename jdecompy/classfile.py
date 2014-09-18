@@ -25,7 +25,7 @@ class ClassFile:
         self.fields_count = 0                # 2 bytes
         self.fields = []                     # variable - Array of FieldInfo
         self.methods_count = 0               # 2 bytes
-        self.methods = []                    # variable
+        self.methods = []                    # variable - Array of MethodInfo
         self.attributes_count = 0            # 2 bytes
         self.attributes = None               # variable
 

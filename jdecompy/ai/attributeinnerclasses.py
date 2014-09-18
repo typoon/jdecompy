@@ -1,6 +1,13 @@
 from ai.attributeinfoentry import AttributeInfoEntry
 
 class AttributeInnerClasses(AttributeInfoEntry):
+    """
+    number_of_classes - number of items in the classes member
+    classes - Array of InnerClass classes
+    """
+
+    number_of_classes = 0 # 2 bytes
+    classes = []          # variable
 
     class InnerClass:
         """
