@@ -29,10 +29,10 @@ def help(argv):
     print("  -i | --info    Prints information about the class file")
     print("  -m             Lists all methods in the class file together with")
     print("                 an index that can be used with the -c option")
-    print("  -c index       Prints the content of the constant pool on index.")
+    print("  -c [index]     Prints the content of the constant pool on index.")
     print("                 If no index is provided, then the whole constant")    
     print("                 pool is printed")    
-    print("  -a index       Prints the code of the method specified by index.")
+    print("  -a [index]     Prints the code of the method specified by index.")
     print("                 index is obtained from running this program with")
     print("                 the -m option. You can pass more than one index")
     print("                 by separating them using a comma, i.e: -c 1,2,10")
@@ -49,6 +49,10 @@ def print_info(cf):
     print("Interfaces count: %s" % cf.interfaces_count)
     print("Fields count: %s" % cf.fields_count)
     print("Attributes count: %d" % cf.attributes_count)
+
+    print("Fields: ")
+    for i in range(cf.fields_count):
+        print("    ", cf.fields[i])
 
 def print_presentation_line(s):
     repeat = 39 - int(len(s)/2)
