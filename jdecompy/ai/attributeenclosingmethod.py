@@ -7,6 +7,9 @@ class AttributeEnclosingMethod(AttributeInfoEntry):
     class_index - should be an index into the constant pool pointing to a ClassInfo structure
     method_index - should be an index into the constant pool pointing to a NameAndTypeInfo structure
     """
+    class_index  = 0 # 2 bytes
+    method_index = 0 # 2 bytes
+
     def __init__(self, constant_pool):
         super().__init__(constant_pool)
         self.class_index = 0   # 2 bytes

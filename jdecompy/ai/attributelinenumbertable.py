@@ -2,6 +2,12 @@ import struct
 from ai.attributeinfoentry import AttributeInfoEntry
 
 class AttributeLineNumberTable(AttributeInfoEntry):
+    """
+    line_number_table_length - The number of elements in the line_number_table
+    line_number - Attay of LineNumberTable objects
+    """
+    line_number_table_length = 0 # 2 bytes
+    line_number_table = []        # variable
 
     class LineNumberTable:
         """

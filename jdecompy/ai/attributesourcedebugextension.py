@@ -4,6 +4,8 @@ class AttributeSourceDebugExtension(AttributeInfoEntry):
     """
     debug_extension - an Utf8 string containing extended debug information
     """
+    debug_extension = b'' # variable
+
     def __init__(self, constant_pool):
         super().__init__(constant_pool)
         self.debug_extension = b''

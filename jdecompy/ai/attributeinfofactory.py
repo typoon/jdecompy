@@ -51,7 +51,7 @@ class AttributeInfoFactory:
             attr = ai.AttributeSourceDebugExtension(constant_pool)
 
         elif name == ATTR_LOCALVARIABLETYPETABLE:
-            attr = ai.AttributeLocalVariableTable(constant_pool)
+            attr = ai.AttributeLocalVariableTypeTable(constant_pool)
 
         elif name == ATTR_RUNTIMEVISIBLEANNOTATIONS:
             attr = ai.AttributeRuntimeVisibleAnnotations(constant_pool)

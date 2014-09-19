@@ -1,6 +1,8 @@
 import struct
 from ai.attributeinfoentry import AttributeInfoEntry
 
+# TODO: Implement me
+
 class AttributeLocalVariableTable(AttributeInfoEntry):
     def __init__(self, constant_pool):
         super().__init__(constant_pool)
