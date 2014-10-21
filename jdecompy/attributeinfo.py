@@ -11,6 +11,10 @@ class AttributeInfo:
         self._size_in_bytes = 0
         self._constant_pool = constant_pool
 
+    def add_entry(self, entry):
+        self.entries.append(entry)
+        self._count += 1
+
     def set_count(self, count):
         self._count = count
 

@@ -88,7 +88,9 @@ class AttributeCode(AttributeInfoEntry):
             ret += t.get_bytes()
 
         ret += struct.pack(">h", self.attributes_count)
-        ret += self.attributes.get_bytes()
+
+        if self.attributes:
+            ret += self.attributes.get_bytes()
 
         return ret
 

@@ -220,8 +220,29 @@ class ClassFile:
         self.fields_count += 1
         self.constant_pool_count = self.constant_pool._count
 
-    def add_method(self, access_flags, name, signature, code):
-        pass
+    #def add_method(self, access_flags, name, signature, code):
+    #    mi = MethodInfo(self.cp)
+
+    #    name_index = self.cp.add_utf8info(name, len(name))
+
+    #    mi.access_flags = access_flags
+    #    mi.name_index = name_index
+    #    mi.descriptor_index = descriptor_index
+    #    mi.attributes_count = 1
+    #    mi.attributes = AttributeInfo(constant_pool)
+
+    #    name_and_type_index = self.cp.add_nameandtypeinfo(name, signature)
+    #    self.cp.add_methodrefinfo(self.this_class, name_and_type_index)
+
+    #    self.methods_count += 1
+    #    self.methods.append(mi)
+    #    self.constant_pool_count = self.constant_pool._count
+
+    def add_method(self, method_info):
+        self.methods.append(method_info)
+        self.methods_count += 1
+        self.constant_pool_count = self.constant_pool._count
+
 
     def save(self, path, classname):
         self.rename_class(classname)
@@ -235,7 +256,7 @@ class ClassFile:
         self.constant_pool_count = self.constant_pool._count
 
         buf = self.get_bytes()
-        path = '/%s/%s.class' % (path, classname)
+        path = '%s/%s.class' % (path, classname)
 
         try:
             f = open(path, mode="wb")

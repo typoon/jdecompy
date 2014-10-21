@@ -12,6 +12,30 @@ if __name__ == '__main__':
     c.load()
 
     c.compile_from_string('''.method public void myMethod()
+                              nop
+                              iload_1
+                              iload_2
+                              isub
+                              istore_3
+                              getstatic 4
+                              new 5
+                              dup
+                              invokespecial 6
+                              ldc 7
+                              invokevirtual 8
+                              iload_3
+                              invokevirtual 9
+                              invokevirtual 10
+                              invokevirtual 11
+                              iload_3
+                              ireturn
                              .method_end''')
+
+    c.compile_from_string('''.method public void myMethod(II)
+                              nop
+                              iload_1
+                              ireturn
+                             .method_end''')
+
     c.save('/tmp/', 'Ex2')
 

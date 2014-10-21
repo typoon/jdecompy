@@ -111,6 +111,8 @@ class ClassFileHelper:
             type = 'S'
         elif type == 'bool':
             type = 'Z'
+        elif type == 'void':
+            type = 'V'
 
         # TODO: if type has a '.' in it, it should be replaced with a /
 

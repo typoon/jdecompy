@@ -1,6 +1,7 @@
 from cp.constantpoolfactory import ConstantPoolFactory
 from cp.utf8info import Utf8Info
 from cp.nameandtypeinfo import NameAndTypeInfo
+from cp.methodrefinfo import MethodRefInfo
 from constants import *
 
 
@@ -57,6 +58,17 @@ class ConstantPool:
 
         return ret
 
+    def add_methodrefinfo(self, class_index, name_and_type_index):
+        mri = MethodRefInfo()
+
+        mri.class_index = class_index
+        mri.name_and_type_index = name_and_type_index
+
+        self._count += 1
+        self.entries.append(mri)
+
+        return self._count - 1
+
     def add_nameandtypeinfo(self, name, type):
         name_and_type_info = NameAndTypeInfo()
 
@@ -76,6 +88,22 @@ class ConstantPool:
         ''' Adds a new Utf8Info entry in the constant pool
         in case one with the same value does not already exist'''
 
+        index = self.get_utf8info_index(string, length)
+        if index > 0:
+            return index
+
+        utf8 = Utf8Info()
+        utf8.length = length
+        utf8.bytes = bytes(string, 'utf-8')
+
+        self._count += 1
+        self.entries.append(utf8)
+
+        return self._count-1
+
+    def get_utf8info_index(self, string, length):
+        ''' Checks if an UTF8Info with the passed string already exists in the
+        constant pool. Returns -1 if not, or the index if it does exist'''
         utf8 = Utf8Info()
         utf8.length = length
         utf8.bytes = bytes(string, 'utf-8')
@@ -84,14 +112,8 @@ class ConstantPool:
         for i in self.entries[1:]:
             if i.tag == CONSTANT_UTF8:
                 if i.bytes == utf8.bytes:
-                    #print("Index %d found for string %s" % (index, string))
                     return index
 
             index += 1
 
-        #print("Count is %d" % self._count)
-        self._count += 1
-        #print("Incremented count to %d" % self._count)
-        self.entries.append(utf8)
-
-        return self._count-1
+        return -1

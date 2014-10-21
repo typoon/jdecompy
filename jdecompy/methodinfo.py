@@ -76,7 +76,7 @@ class MethodInfo:
 
             asm += opc['name']
             ##print("opc %s" % opc['name'])
-            ##print("opc %s args %d" % (opc['name'], opc['num_args']))
+            ##print("opc %s args %d" % (opc['name'], opc['num_bytes']))
             ##print("count = %d" % count)
 
             if opc['name'] == "lookupswitch":
@@ -240,8 +240,8 @@ class MethodInfo:
                 abort = True
 
             else:
-                count = count + 1 + opc['num_args']
-                for i in range(opc['num_args']):
+                count = count + 1 + opc['num_bytes']
+                for i in range(opc['num_bytes']):
                     _, b = next(e)
                     asm += ' ' + str(hex(b))
 

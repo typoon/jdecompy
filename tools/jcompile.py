@@ -1,5 +1,6 @@
 import sys
 import getopt
+import os
 
 sys.path.append('../')
 
@@ -81,4 +82,10 @@ if not r:
     print("Aborting...")
     sys.exit(-1)
 
+dest_class = os.path.basename(output_file).replace(".class","")
+dest_dir = os.path.dirname(output_file)
 
+cf.compile_from_file(code_file)
+cf.save(dest_dir, dest_class)
+
+print("Compilation completed succesfully!")

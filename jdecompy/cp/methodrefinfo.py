@@ -1,4 +1,5 @@
 import struct
+from constants import *
 from cp.constantpoolentry import ConstantPoolEntry
 from cp.constantpoolutils import ConstantPoolUtils
 
@@ -14,7 +15,7 @@ class MethodRefInfo(ConstantPoolEntry):
     name_and_type_index = 0
 
     def __init__(self):
-        super().__init__()
+        super().__init__(CONSTANT_METHODREF)
         self.class_index = 0          # 2 bytes
         self.name_and_type_index = 0  # 2 bytes
 
