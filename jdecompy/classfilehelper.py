@@ -49,6 +49,51 @@ class ClassFileHelper:
         return access_flags
 
     @staticmethod
+    def access_flags_to_str(af):
+        access_flags = []
+
+        if af & ACC_PUBLIC == ACC_PUBLIC:
+            access_flags.append("public")
+
+        if af & ACC_PRIVATE == ACC_PRIVATE:
+            access_flags.append("private")
+
+        if af & ACC_PROTECTED == ACC_PROTECTED:
+            access_flags.append("protected")
+
+        if af & ACC_STATIC == ACC_STATIC:
+            access_flags.append("static")
+
+        if af & ACC_FINAL == ACC_FINAL:
+            access_flags.append("final")
+
+        if af & ACC_VOLATILE == ACC_VOLATILE:
+            access_flags.append("volatile")
+
+        if af & ACC_TRANSIENT == ACC_TRANSIENT:
+            access_flags.append("transient")
+
+        if af & ACC_SYNCHRONIZED == ACC_SYNCHRONIZED:
+            access_flags.append("synchronized")
+
+        if af & ACC_NATIVE == ACC_NATIVE:
+            access_flags.append("native")
+
+        if af & ACC_ABSTRACT == ACC_ABSTRACT:
+            access_flags.append("abstract")
+
+        if af & ACC_STRICT == ACC_STRICT:
+            access_flags.append("strict")
+
+        if af & ACC_SUPER == ACC_SUPER:
+            access_flags.append("super")
+
+        if af & ACC_INTERFACE == ACC_INTERFACE:
+            access_flags.append("interface")
+
+        return ", ".join(access_flags)
+
+    @staticmethod
     def translate_type(type):
         if type == 'byte':
             type = 'B'

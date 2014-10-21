@@ -4,6 +4,7 @@ import getopt
 sys.path.append('../')
 
 from jdecompy.classfile import ClassFile
+from jdecompy.classfilehelper import ClassFileHelper
 
 #--------------------------------------------------------------------
 # Global variables go here
@@ -18,7 +19,7 @@ global _code_index
 #--------------------------------------------------------------------
 
 def usage(argv):
-    print("Usage: python3 %s [-h|--help] [-f|--full] [-m] [-p[index]] [-c[index]] File.class" % (argv[0]))
+    print("Usage: python3 %s [-h|--help] [-f|--full] [-m] [-a [index]] [-c [index]] File.class" % (argv[0]))
 
 def help(argv):
     usage(argv)
@@ -43,16 +44,16 @@ def print_info(cf):
     print("Major version: ", cf.major_version)
     print("Constant pool count: ", cf.constant_pool_count)
     print("Constant pool size in bytes: %d" % cf.constant_pool.get_size_in_bytes())
-    print("Access flags: %d" % cf.access_flags)
+    print("Access flags: %d [%s]" % (cf.access_flags, ClassFileHelper.access_flags_to_str(cf.access_flags)))
     print("This class: %s" % cf.constant_pool.entries[cf.this_class].get_name())
     print("Super class: %s" % cf.constant_pool.entries[cf.super_class].get_name())
     print("Interfaces count: %s" % cf.interfaces_count)
     print("Fields count: %s" % cf.fields_count)
-    print("Attributes count: %d" % cf.attributes_count)
 
-    print("Fields: ")
     for i in range(cf.fields_count):
         print("    ", cf.fields[i])
+
+    print("Attributes count: %d" % cf.attributes_count)
 
 def print_presentation_line(s):
     repeat = 39 - int(len(s)/2)

@@ -1,6 +1,7 @@
 import struct
 from attributeinfo import AttributeInfo
 from cp.constantpoolutils import ConstantPoolUtils
+from classfilehelper import ClassFileHelper
 
 
 class FieldInfo:
@@ -26,10 +27,12 @@ class FieldInfo:
         self.attributes = AttributeInfo(constant_pool)
 
     def __str__(self):
+        access_flags_str = ClassFileHelper.access_flags_to_str(self.access_flags)
         ret = 'FieldInfo: '
         ret += self.get_field_type() + ' '
         ret += self._constant_pool.entries[self.name_index].get_bytes_as_str() + ' '
-        ret += 'Access flags: %d' % self.access_flags
+
+        ret += 'Access flags: %d [%s]' % (self.access_flags, access_flags_str)
         return ret
 
     def _build(self, f):
