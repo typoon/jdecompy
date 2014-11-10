@@ -19,7 +19,7 @@ global _code_index
 #--------------------------------------------------------------------
 
 def usage(argv):
-    print("Usage: python3 %s [-h|--help] [-f|--full] [-m] [-a [index]] [-c [index]] File.class" % (argv[0]))
+    print("Usage: python3 %s [-h|--help] [-i | --info] [-f|--full] [-m] [-a [index]] [-c [index]] File.class" % (argv[0]))
 
 def help(argv):
     usage(argv)

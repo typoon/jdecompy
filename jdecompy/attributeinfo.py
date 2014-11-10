@@ -33,6 +33,7 @@ class AttributeInfo:
             name_index = int.from_bytes(self._file.read(2), byteorder='big')
             length = int.from_bytes(self._file.read(4), byteorder='big')
             name = self._constant_pool.entries[name_index].get_bytes_as_str()
+            #print("Attribute %s length = %d" % (name, length))
 
             attr = AttributeInfoFactory.create(name, self._constant_pool)
             attr.name_index = name_index
