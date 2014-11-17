@@ -28,7 +28,7 @@ class MethodRefInfo(ConstantPoolEntry):
         return self._constant_pool.entries[self.class_index].get_name()
 
     def get_method_name(self):
-        return self._constant_pool.entries[self.name_and_type_index].get_class_name()
+        return self._constant_pool.entries[self.name_and_type_index].get_name()
 
     def get_method_type(self):
         info = self._constant_pool.entries[self.name_and_type_index].get_descriptor()
@@ -44,7 +44,7 @@ class MethodRefInfo(ConstantPoolEntry):
 
     def __str__(self):
         ret = 'MethodRefInfo: '
-        #ret += self.get_method_signature()
+        ret += self.get_method_signature()
         ret += ' [class_index = %d]' % self.class_index
         ret += ' [name_and_type_index = %d]' % self.name_and_type_index
         return ret

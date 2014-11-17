@@ -244,6 +244,8 @@ class MethodInfo:
                 abort = True
 
             else:
+                line = ''
+                comment = ''
                 count = count + 1 + opc['num_bytes']
                 d = []
                 for i in range(opc['num_bytes']):
@@ -252,13 +254,20 @@ class MethodInfo:
 
                 #asm += ' ' + str(hex(b))
                 if len(d) > 1:
-                    asm += ' ' + str(struct.unpack(">h", bytes(d))[0])
+                    comment = '\t# ' + str(self._constant_pool.entries[struct.unpack(">h", bytes(d))[0]])
+                    line += ' ' + str(struct.unpack(">h", bytes(d))[0])
                     # TODO: There should be an if for each opcode here for 
                     #       proper disassembling
                 else:
                     if len(d) > 0:
                         for i in d:
                             asm += ' ' + str(hex(i))
+                
+
+                asm = asm.split("\n")
+                asm[-1] = asm[-1].ljust(20, ' ') + comment
+                asm = "\n".join(asm)
+                asm += line
 
             asm += "\n\t"
 
