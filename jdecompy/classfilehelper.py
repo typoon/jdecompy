@@ -91,7 +91,7 @@ class ClassFileHelper:
         if af & ACC_INTERFACE == ACC_INTERFACE:
             access_flags.append("interface")
 
-        return ", ".join(access_flags)
+        return " ".join(access_flags)
 
     @staticmethod
     def translate_type(type):

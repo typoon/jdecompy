@@ -2,6 +2,7 @@ import struct
 import sys
 from attributeinfo import AttributeInfo
 from cp.constantpoolutils import ConstantPoolUtils
+from classfilehelper import ClassFileHelper
 from opcodes import OPC
 from constants import *
 
@@ -32,7 +33,8 @@ class MethodInfo:
     def get_method_signature(self):
         info = ConstantPoolUtils.parse_method_type(self._constant_pool.entries[self.descriptor_index].get_bytes_as_str())
         name = self._constant_pool.entries[self.name_index].get_bytes_as_str()
-        ret = info['ret_type'] + ' ' + name + '(' + ','.join(info['params']) + ')'
+        access = ClassFileHelper.access_flags_to_str(self.access_flags)
+        ret = access + ' ' + info['ret_type'] + ' ' + name + '(' + ','.join(info['params']) + ')'
         return ret
 
     def get_code_attr(self):
@@ -56,6 +58,8 @@ class MethodInfo:
 
         return c
 
+    # TODO: This should be a helper method, where it takes the byte array of
+    #       the code attribute as a parameter and returns the assembly code
     def get_code_asm(self):
         code = self.get_code_bytes()
         abort = False
@@ -241,9 +245,20 @@ class MethodInfo:
 
             else:
                 count = count + 1 + opc['num_bytes']
+                d = []
                 for i in range(opc['num_bytes']):
                     _, b = next(e)
-                    asm += ' ' + str(hex(b))
+                    d.append(b)
+
+                #asm += ' ' + str(hex(b))
+                if len(d) > 1:
+                    asm += ' ' + str(struct.unpack(">h", bytes(d))[0])
+                    # TODO: There should be an if for each opcode here for 
+                    #       proper disassembling
+                else:
+                    if len(d) > 0:
+                        for i in d:
+                            asm += ' ' + str(hex(i))
 
             asm += "\n\t"
 

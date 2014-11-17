@@ -60,7 +60,7 @@ def p_methods(p):
     
 def p_method_start(p):
     '''method_start : METHOD_START access_modifiers RET_TYPE IDENTIFIER PARAMS'''
-    #print("Inside p_method_start")
+    print("Inside p_method_start %s" % p[4])
     #g_method.access_modifiers = p[2]
     g_method.ret_type = p[3]
     g_method.name = p[4]
@@ -78,7 +78,7 @@ def p_method_body(p):
                    | vars mnemonics
                    | empty'''
 
-    #print("Inside p_method_body")
+    print("Inside p_method_body")
 
 def p_method_end(p):
     '''method_end : METHOD_END'''
@@ -185,7 +185,13 @@ def p_opcode(p):
               | bipush
               | ireturn
               | return
-              | iconst_m1'''
+              | iconst_m1
+              | iconst_0
+              | iconst_1
+              | iconst_2
+              | iconst_3
+              | iconst_4
+              | iconst_5'''
     #p[0] = p[1]
     #print("opcode: p[0] ", p[0])
     g_method.code += p[1]
@@ -327,6 +333,7 @@ def p_invokevirtual(p):
     isString = False
     cp = cf.constant_pool
 
+    print("Inside invokevirtual")
 
     try:
         p[2] = int(p[2])
@@ -337,7 +344,7 @@ def p_invokevirtual(p):
         p[0] = opc_compile(p[1])
         p[0] += struct.pack('>h', p[2])
     else:
-        #print("inside invokevirtual 2")
+        print("inside invokevirtual 2")
         p[0] = opc_compile(p[1])
         method_name = None
         found = False
@@ -347,6 +354,7 @@ def p_invokevirtual(p):
             if i.tag == CONSTANT_METHODREF:
                     nat_index = i.name_and_type_index
                     method_name = cp.entries[cp.entries[nat_index].name_index].get_bytes_as_str()
+                    print("method_name = %s" % method_name)
                     if method_name == p[2]:
                         found = True
                         break
@@ -354,6 +362,7 @@ def p_invokevirtual(p):
             mri_index += 1
 
         if found:
+            print("Found on index %d" % mri_index)
             p[0] += struct.pack('>h', mri_index)
 
 def p_ldc(p):
@@ -387,6 +396,36 @@ def p_iconst_m1(p):
     '''iconst_m1 : ICONST_M1'''
     p[0] = b'\x02'
     #print("iconst_m1: p[0]", p[0])
+
+
+def p_iconst_0(p):
+    '''iconst_0 : ICONST_0'''
+    p[0] = b'\x03'
+
+
+def p_iconst_1(p):
+    '''iconst_1 : ICONST_1'''
+    p[0] = b'\x04'
+
+
+def p_iconst_2(p):
+    '''iconst_2 : ICONST_2'''
+    p[0] = b'\x05'
+
+
+def p_iconst_3(p):
+    '''iconst_3 : ICONST_3'''
+    p[0] = b'\x06'
+
+def p_iconst_4(p):
+    '''iconst_4 : ICONST_4'''
+    p[0] = b'\x07'
+
+def p_iconst_5(p):
+    '''iconst_5 : ICONST_5'''
+    p[0] = b'\x08'
+
+
 
 
 # ----------------------------------------------------------------------------

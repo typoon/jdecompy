@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import getopt
 
@@ -66,8 +68,9 @@ def print_method_list(cf):
         print("[%d] - %s" % (i, cf.methods[i].get_method_signature()))
 
 def print_method_code(cf, idx):
-    print("%s" % (cf.methods[i].get_method_signature()))
+    print(".method %s" % (cf.methods[i].get_method_signature()))
     print(cf.methods[idx].get_code_asm())
+    print(".method_end")
 
 def print_cp(cf, idx):
     print("[%d] %s" % (idx, cf.constant_pool.entries[idx]))
