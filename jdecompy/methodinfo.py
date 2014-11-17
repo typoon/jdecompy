@@ -256,20 +256,21 @@ class MethodInfo:
                 if len(d) > 1:
                     comment = '\t# ' + str(self._constant_pool.entries[struct.unpack(">h", bytes(d))[0]])
                     line += ' ' + str(struct.unpack(">h", bytes(d))[0])
+                    asm = asm.split("\n")
+                    asm[-1] += line
+                    asm[-1] = asm[-1].ljust(20, ' ') + comment
+                    asm = "\n".join(asm)
+                    asm += line
+
+
                     # TODO: There should be an if for each opcode here for 
                     #       proper disassembling
                 else:
                     if len(d) > 0:
                         for i in d:
-                            asm += ' ' + str(hex(i))
-                
+                            asm += ' ' + str(i)
 
-                asm = asm.split("\n")
-                asm[-1] = asm[-1].ljust(20, ' ') + comment
-                asm = "\n".join(asm)
-                asm += line
-
-            asm += "\n\t"
+                asm += "\n\t"
 
         if abort:
             #print(asm)

@@ -8,12 +8,16 @@ def t_error(t):
 
 states = (
     ('sttvar', 'inclusive'),
+    ('sttcomment', 'inclusive'),
     ('sttmethod', 'exclusive'),
     ('sttaccessmod', 'exclusive'),
     ('sttrettype', 'exclusive'),
 )
 
 tokens = (
+    # Comment
+    'COMMENT',
+
     # Data Types
     'BYTE',
     'CHAR',
@@ -42,13 +46,13 @@ tokens = (
 #%token <identifier> IDENTIFIER
 
     'IDENTIFIER',
-	'METHOD_START',
+    'METHOD_START',
     'METHOD_IDENTIFIER',
     'METHOD_NAME',
 #%token <identifier> METHOD_IDENTIFIER
 #%token <param> PARAMS
     'PARAMS',
-	'METHOD_END',
+    'METHOD_END',
 #%token <visibility> VISIBILITY
 
     # Opcodes
@@ -316,6 +320,11 @@ def t_HEXNUMBER(t):
 
     return t
 
+def t_sttcomment(t):
+    r'\#+.*'
+    t.lexer.push_state('sttcomment')
+    pass
+
 
 def t_sttvar(t):
     r'[\.]var'
@@ -334,6 +343,19 @@ def t_sttmethod(t):
 t_STRING = r'["]([^\\"]+|\\.)*["]'
 
 t_ANY_IDENTIFIER = r'\w+'
+
+# ---------------------------------------------------------
+# Rules for state comment
+# ---------------------------------------------------------
+t_sttcomment_ignore = r'.*'
+
+def t_sttcomment_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+    t.lexer.pop_state()
+
+def t_sttcomment_error(t):
+    print("Invalid comment")
 
 # ---------------------------------------------------------
 # Rules for state sttvar 
@@ -355,6 +377,12 @@ def t_sttvar_newline(t):
     t.lexer.lineno += len(t.value)
     t.lexer.pop_state()
 
+
+def t_sttvar_COMMENT(t):
+    r'\#.*'
+    pass
+
+
 # ---------------------------------------------------------
 # Rules for state sttmethod
 # ---------------------------------------------------------
@@ -363,6 +391,10 @@ t_sttmethod_ignore = '\t\r '
 #def t_sttmethod_PARAMS(t):
 #    r'[\(][a-zA-Z\[;\/]*[\)][a-zA-Z\[;\/]*'
 #    return t
+
+def t_sttmethod_COMMENT(t):
+    r'\#.*'
+    pass
 
 
 def t_sttmethod_PARAMS(t):

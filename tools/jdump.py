@@ -55,6 +55,7 @@ def print_info(cf):
     for i in range(cf.fields_count):
         print("    ", cf.fields[i])
 
+    print("Methods count: %d" % cf.methods_count)
     print("Attributes count: %d" % cf.attributes_count)
 
 def print_presentation_line(s):
@@ -71,6 +72,7 @@ def print_method_code(cf, idx):
     print(".method %s" % (cf.methods[i].get_method_signature()))
     print(cf.methods[idx].get_code_asm())
     print(".method_end")
+    print("\n")
 
 def print_cp(cf, idx):
     print("[%d] %s" % (idx, cf.constant_pool.entries[idx]))
@@ -117,7 +119,10 @@ for opt, arg in opts:
         print_presentation_line("END INFO")
 
     if opt in ("-f", "--full"):
-        pass
+        opts.append(("-i", "--"))
+        opts.append(("-m", "--"))
+        opts.append(("-c", "--"))
+        opts.append(("-a", "--"))
 
     if opt == "-m":
         print_presentation_line("METHODS LIST")

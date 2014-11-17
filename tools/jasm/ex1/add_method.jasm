@@ -1,3 +1,35 @@
+.method public static void main([Ljava/lang/String;)
+    new 2               # ClassInfo: Modified [name_index = 25] 2
+    dup
+    invokespecial 3     # MethodRefInfo: void <init>() [class_index = 2] [name_and_type_index = 24] 3
+    astore_2
+    aload_2
+    iconst_1
+    iconst_2
+    invokevirtual 50    # MethodRefInfo: int sub(int, int) [class_index = 2] [name_and_type_index = 49] 50
+    istore_1
+    getstatic 5         # FieldRefInfo: java/lang/System -> java.io.PrintStream out [class_index = 27] [name_and_type_index = 28] 5
+    new 6               # ClassInfo: java/lang/StringBuilder [name_index = 29] 6
+    dup
+    invokespecial 7     # MethodRefInfo: void <init>() [class_index = 6] [name_and_type_index = 24] 7
+    ldc 8
+    invokevirtual 9     # MethodRefInfo: java.lang.StringBuilder append(java.lang.String) [class_index = 6] [name_and_type_index = 31] 9
+    iload_1
+    invokevirtual 10    # MethodRefInfo: java.lang.StringBuilder append(int) [class_index = 6] [name_and_type_index = 32] 10
+    invokevirtual 11    # MethodRefInfo: java.lang.String toString() [class_index = 6] [name_and_type_index = 33] 11
+    invokevirtual 12    # MethodRefInfo: void println(java.lang.String) [class_index = 34] [name_and_type_index = 35] 12
+    return
+    
+.method_end
+
+.method public int sum(II)
+    iload_1
+    iload_2
+    iadd
+    ireturn
+    
+.method_end
+
 .method public int sub(II)
     iload_1
     iload_2
@@ -5,29 +37,6 @@
     istore_3
     iload_3
     ireturn
-.method_end
-
-
-.method public static void main ([Ljava/lang/String;)
-    new 2
-    dup
-    invokespecial 3
-    astore_2
-    aload_2
-    iconst_1
-    iconst_2
-    invokevirtual sub
-    istore_1
-    getstatic 5
-    new 6
-    dup
-    invokespecial 7
-    ldc 8
-    invokevirtual 9
-    iload_1
-    invokevirtual 10
-    invokevirtual 11
-    invokevirtual 12
-    return
     
 .method_end
+
